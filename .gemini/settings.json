@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "SessionStart": [{
+      "command": "python3 execution/brain.py last-session --quiet 2>/dev/null || true"
+    }],
+    "SessionEnd": [{
+      "command": "echo '\\n💾 Wrap up: python3 execution/brain.py wrap-up -s \"summary\" -t \"tags\"'"
+    }]
+  }
+}
