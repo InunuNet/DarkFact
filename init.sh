@@ -86,6 +86,24 @@ EOF
 # Learned
 
 _Lessons added by the maintainer agent during session wrap-up._
+
+## L1: Two-repo Git model — read this first
+
+Every DarkFact project uses two Git remotes. Both must be set up.
+
+| Remote | Points to | Purpose |
+|--------|-----------|---------|
+| `origin` | `github.com/InunuNet/[THIS PROJECT]` | Your project's code, history, issues |
+| `darkfact-upstream` | `github.com/InunuNet/DarkFact` | Template infrastructure — pull only |
+
+**Rules:**
+- Push your work to `origin` — your project's own GitHub repo
+- Pull template updates via `make update-template` (fetches from `darkfact-upstream`)
+- **Never push to `darkfact-upstream`** — it's the shared template, read-only for you
+- Template bug? Report via `/report-bug` → creates issue on `InunuNet/DarkFact`
+- Project bug? Create issue on your own `origin` repo
+
+Check remotes are correct: `git remote -v`
 EOF
 
     cat > .agent/memory/project/backlog.md << 'EOF'

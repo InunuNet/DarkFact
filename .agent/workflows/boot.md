@@ -54,9 +54,20 @@ python3 execution/ki_recall.py "PROJECT_TYPE_OR_TOPIC" --n 3
 python3 execution/brain.py recall "CURRENT_TASK" --n 3
 ```
 
-4. **Check GitHub for user feedback** (DarkFact sessions only):
+5. **Check Git remotes — verify two-repo model is set up correctly**:
 ```bash
-make check-feedback
+git remote -v
 ```
+Every project must have exactly two remotes:
+- `origin` → **your project's own GitHub repo** (`github.com/InunuNet/[ProjectName]`)
+  - This is where your source code and project history live
+  - If missing: `git remote add origin https://github.com/InunuNet/[ProjectName].git`
+- `darkfact-upstream` → **the DarkFact template** (`github.com/InunuNet/DarkFact`)
+  - This is where you pull infrastructure updates from (`make update-template`)
+  - **Never push to darkfact-upstream** — it's read-only for downstream projects
+  - If missing: `git remote add darkfact-upstream https://github.com/InunuNet/DarkFact.git`
 
-> **Note**: In Claude Code and Gemini CLI, the SessionStart hook runs step 1 automatically. This workflow is for Antigravity and manual use.
+> 🐛 **Reporting bugs**: Template/workflow bug → report to `InunuNet/DarkFact` via `/report-bug`
+> Project bug → create an issue in your own repo (`origin`)
+
+> **Note**: In Claude Code and Gemini CLI, the SessionStart hook runs steps 1-2 automatically. This workflow is for Antigravity and manual use.
