@@ -150,12 +150,27 @@ frameworks (SwiftUI, Network.framework) over third-party."
 
 ### 6. Activate relevant rules
 
-```bash
-# Enable security rules if needed
-# (already in .agent/rules/security.md — just confirm it's appropriate)
+Rules are file-based — activation means symlinking or copying the relevant rule files into `.claude/rules/` so Claude Code loads them automatically.
 
-# Remove style_guide if no UI
-# Remove style_guide if project is CLI-only
+**Security rules** (if `features.security_rules` = true):
+```bash
+# Check the file exists
+ls .agent/rules/security.md && echo "✅ security rules present"
+
+# Ensure it's loaded by Claude Code
+ls .claude/rules/security.md 2>/dev/null || ln -s ../../.agent/rules/security.md .claude/rules/security.md
+```
+
+**Style guide** (if `features.style_guide` = true):
+```bash
+ls .agent/rules/style_guide.md 2>/dev/null && {
+  ls .claude/rules/style_guide.md 2>/dev/null || ln -s ../../.agent/rules/style_guide.md .claude/rules/style_guide.md
+} || echo "ℹ️ No style_guide.md — skip"
+```
+
+**Verify active rules:**
+```bash
+ls .claude/rules/
 ```
 
 ### 7. Sync agents
