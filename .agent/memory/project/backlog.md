@@ -55,6 +55,12 @@
 - [ ] **INSIGHT: SysMonitor vs SysMon** — two projects for one product = workspace sprawl. DarkFact should warn or recommend archiving superseded workspaces. Add `status: archive` to profile.json spec and document the convention.
 - [ ] **INSIGHT: ai.inunu.net fleet management** — managing 6 bots (Dadb0t, Momb0t, etc.) from one workspace. Fleet management is a real DarkFact use case. PAI research should explore a `fleet` mode where one workspace coordinates many agents.
 - [ ] **INSIGHT: NWU Tender used markitdown** — document conversion (PDF → Markdown) is a recurring need across research projects. Add `markitdown` as a recommended addon in the docs/research soul type.
+- [ ] **INSIGHT: Parallelism is Antigravity-specific** — Antigravity agents cannot spawn parallel child agents (sequential orchestration only). Claude Code and Gemini CLI both support native parallel subagents. Document per-provider parallelism capability in the agent team docs so teams know what's available in their tool.
+
+## GitHub Issues (Pending)
+- [ ] **ISSUE #3: `ki_recall.py` not wired** — Either wire it into the boot sequence or remove it entirely if superseded.
+- [ ] **ISSUE #3: `security_rules` & `style_guide` undiscoverable** — Provide opt-in prompts during the `/onboard` workflow.
+- [ ] **ISSUE #3: Version string drift** — Update Makefile from `v1.0.0` to `v1.1.0`.
 
 ## DONE
 

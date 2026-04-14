@@ -3,7 +3,7 @@
 .PHONY: help sync-agents brain-export brain-import brain-stats commit audit test update-template onboard check-feedback
 
 help:
-	@echo "🏭 DarkFact v1.0.0"
+	@echo "🏭 DarkFact v1.1.0"
 	@echo ""
 	@echo "  Project Setup"
 	@echo "  make onboard           Start AI-guided project onboarding"
