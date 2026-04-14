@@ -51,3 +51,12 @@ Template users won't report bugs if it requires navigating GitHub manually. The 
 ## L10: darkfact() shell function is the entry point (2026-04-14)
 
 The `anti()` function pointed to a dead path (`/ai/Workspace Template/execution/new_project.py`). The new `darkfact()` function copies the template, resets git, adds the upstream remote, and presents an IDE picker (Antigravity/Claude/Terminal). This is how non-technical users start projects.
+
+## L11: Native-first is UI-fragile — daemon pattern has real merit (2026-04-14)
+
+Going native-first (hooks, skills, workflows) is the right call for simplicity and portability. But the old Dark Factory CLI daemon had one genuine advantage: it queued and retried tasks independently of the UI. When Antigravity/Claude/Gemini hit API rate limits or crash, native hooks die with them — there is no retry layer. DarkFact v1.1.0 has this gap. Mitigation options (in order of complexity):
+1. **Checkpoint pattern** — each workflow step writes output before moving to the next. Crash = resume from last checkpoint, not from zero.
+2. **Headless fallback** — for long tasks, use `claude -p` / `gemini -p` from terminal. Survives UI crashes.
+3. **Lightweight local queue** — JSON task file + cron/launchd. Only if 1+2 are insufficient.
+
+Rule: native-first for sessions, checkpoints for resilience.
