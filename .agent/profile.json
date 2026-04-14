@@ -1,18 +1,30 @@
 {
   "name": "DarkFact",
   "description": "Provider-agnostic agentic workspace template",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "template",
   "platforms": ["claude-code", "gemini-cli", "opencode"],
   "primary_platform": "claude-code",
+
+  "_comment_onboarding": "Fields below are populated by /onboard. Do not remove stubs.",
+  "onboarding_complete": false,
+  "project_name": "",
+  "project_type": "",
+  "tech_stack": [],
+
   "features": {
     "brain": true,
     "hooks": true,
     "agent_teams": true,
     "skills": true,
-    "telos_lite": true
+    "telos_lite": true,
+    "security_rules": false,
+    "style_guide": false,
+    "llm_apis": false
   },
+
   "agents": ["lead", "dev", "analyst", "architect", "qa", "docs", "maintainer"],
+
   "memory": {
     "brain_backend": "chromadb",
     "brain_path": ".agent/memory/brain",
