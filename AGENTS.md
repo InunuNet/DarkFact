@@ -4,7 +4,13 @@
 
 ## 0. Boot (Mandatory)
 
-Before doing anything:
+**First — verify you are in the correct workspace:**
+```bash
+pwd && cat .agent/profile.json | python3 -c "import sys,json; p=json.load(sys.stdin); print('Project:', p.get('project_name','UNKNOWN'))"
+```
+If the project name doesn't match the directory → **STOP**. Tell the user to open this project in its own separate IDE window. Never act on a directory that isn't your assigned project.
+
+Then:
 
 1. Run `python3 execution/brain.py last-session --quiet` — what happened last session
 2. Read `.agent/memory/project/goals.md` — what we're trying to achieve
