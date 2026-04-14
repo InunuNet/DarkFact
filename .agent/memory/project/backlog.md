@@ -2,8 +2,14 @@
 
 ## In Progress
 
-- [ ] **`/resume` workflow** — detect partial onboarding state and pick up where a crashed session left off
-- [ ] PortPulse end-to-end test case (paused — collecting observations)
+- [ ] **`/resume` workflow** — detect partial onboarding state and pick up where a crashed session left off ✅ shipped
+- [ ] **`/migrate` — Legacy Workspace → DarkFact v1.1.0** — one-time migration tool for 16 existing projects (v3.0–v4.8). See [migration_plan.md](file:///Users/vetus/.gemini/antigravity/brain/3837d78f-d855-4c4e-bf3c-fa9ad4c0a09c/migration_plan.md)
+  - [ ] Phase 1: Write `execution/migrate.sh` + `execution/merge_profile.py`
+  - [ ] Phase 2: Test on HomeClaw (Tier 1, no brain)
+  - [ ] Phase 3: Test on LanScout (Tier 2, has brain)
+  - [ ] Phase 4: Migrate all 16 projects (Tier 1 → Tier 2 → PAI last)
+  - [ ] Phase 5: Cleanup — delete backups, archive old Workspace Template
+- [ ] PortPulse end-to-end test case (in progress — observing)
 
 ## Test Run Observations (PortPulse — 2026-04-14)
 
