@@ -4,11 +4,18 @@
 
 ## 0. Boot (Mandatory)
 
-**First — verify you are in the correct workspace:**
+**First — two-layer workspace verification. Both must pass:**
 ```bash
+# Layer 1: Hard identity marker
+cat WORKSPACE 2>/dev/null || echo "MISSING — run bash init.sh"
+
+# Layer 2: Config cross-check
 pwd && cat .agent/profile.json | python3 -c "import sys,json; p=json.load(sys.stdin); print('Project:', p.get('project_name','UNKNOWN'))"
 ```
-If the project name doesn't match the directory → **STOP**. Tell the user to open this project in its own separate IDE window. Never act on a directory that isn't your assigned project.
+If `WORKSPACE` is missing or either name doesn't match the directory → **STOP**.
+Tell the user to open this project in its own separate IDE window. **Never act on a directory that isn't your assigned project.**
+
+> ⛔ Cross-project edits are the #1 source of data loss in this fleet. No exceptions.
 
 Then:
 

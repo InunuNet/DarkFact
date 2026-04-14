@@ -58,6 +58,11 @@ scaffold_core() {
     touch .agent/memory/scratch/.keep
     touch .agent/skills/.keep
 
+    # WORKSPACE marker — hard identity file for workspace isolation.
+    # Boot Step 0 reads this to verify the agent is in the right project.
+    # Never delete this file. Never copy it between projects.
+    echo "$PROJECT_NAME" > WORKSPACE
+
     # Fresh project files (don't inherit template's context)
     cat > .agent/memory/project/goals.md << 'EOF'
 # Goals
