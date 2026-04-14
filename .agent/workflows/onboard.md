@@ -112,14 +112,23 @@ Initial feature breakdown:
 > ⚠️ Update ONLY the stub fields that already exist — do NOT rewrite the file.
 > Preserve all infrastructure fields (`agents`, `memory`, `platforms`, `features.brain`, etc.)
 
-Stub fields to update (they already exist with empty/false defaults):
-- `project_name`: the project directory name
-- `project_type`: one of `macos`, `webapp`, `python`, `api`, `mobile`, `research`, `devops`, `financial`, `legal`, `security`, `fleet`, `general`
-- `soul_type`: the agent persona domain (see heuristics table above)
-- `tech_stack`: array of technologies chosen
-- `features.security_rules`: true/false
-- `features.style_guide`: true/false
-- `onboarding_complete`: set to `true` (last action — confirms onboarding succeeded)
+Fill in the `FILL_IN` values from the onboarding conversation, then run this command:
+
+```python
+python3 -c "
+import json, sys
+with open('.agent/profile.json', 'r') as f:
+    p = json.load(f)
+p['project_name'] = 'FILL_IN'
+p['project_type'] = 'FILL_IN'  # one of: macos, webapp, python, api, mobile, research, devops, financial, legal, security, fleet, general
+p['tech_stack'] = ['FILL_IN']
+p['onboarding_complete'] = False
+p['features']['security_rules'] = False  # replace with True if enabled in Step 4
+p['features']['style_guide'] = False     # replace with True if enabled in Step 4
+with open('.agent/profile.json', 'w') as f:
+    json.dump(p, f, indent=2)
+"
+```
 
 #### `.agent/identity/soul.md`
 Rewrite to match the project domain:
@@ -170,4 +179,20 @@ If yes → prompt the Lead agent:
 @lead Read .agent/memory/project/goals.md and backlog.md.
 Create a detailed implementation plan for Phase 1.
 Return a task breakdown with agent assignments.
+```
+
+### 9. Mark onboarding complete
+
+Run this as the LAST action. This confirms onboarding succeeded and prevents re-onboarding on next boot.
+
+```bash
+python3 -c "
+import json
+with open('.agent/profile.json', 'r') as f:
+    p = json.load(f)
+p['onboarding_complete'] = True
+with open('.agent/profile.json', 'w') as f:
+    json.dump(p, f, indent=2)
+print('✅ Onboarding complete. profile.json updated.')
+"
 ```

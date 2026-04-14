@@ -3,8 +3,9 @@
 ## TODO — v1.2.6+ (Next Patches)
 
 ### Bugs
-- [ ] **BUG: `profile.json` not updated during onboarding** — onboard.md writes goals/backlog/soul/rules but never updates `profile.json` with project_name/project_type/tech_stack. Fix: add atomic JSON update step.
-- [ ] **BUG: `onboarding_complete` flag never set to `true`** — means boot check always triggers re-onboarding. Must be set as the LAST action in `/onboard`.
+- [x] **BUG: `profile.json` not updated during onboarding** — fixed in v1.2.6: Step 5 now has explicit `python3` atomic update command with FILL_IN placeholders and inline comments for security_rules/style_guide.
+- [x] **BUG: `onboarding_complete` flag never set to `true`** — fixed in v1.2.6: new Step 9 sets it as the final named action.
+- [ ] **BUG: Step 6 (Activate rules) has no executable commands** — bash comments only, no actual file operations. Pre-existing ambiguity flagged by QA. Low priority.
 
 ### Hardening
 - [ ] **ARCHITECTURE: Checkpoint pattern for crash resilience** — each workflow step should write state before moving to next. Crash = resume from last checkpoint. Document the pattern.
