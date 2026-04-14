@@ -1,9 +1,9 @@
-# DarkFact v1.2.0 Makefile
+# DarkFact v1.2.1 Makefile
 
 .PHONY: help sync-agents brain-export brain-import brain-stats commit audit test update-template onboard check-feedback
 
 help:
-	@echo "🏭 DarkFact v1.2.0"
+	@echo "🏭 DarkFact v1.2.1"
 	@echo ""
 	@echo "  Project Setup"
 	@echo "  make onboard           Start AI-guided project onboarding"

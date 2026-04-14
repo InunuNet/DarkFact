@@ -68,3 +68,12 @@ The default `profile.json` contained only template infrastructure fields (`name`
 **Fix applied**: Added onboarding stub fields (`onboarding_complete: false`, `project_name: ""`, `project_type: ""`, `tech_stack: []`) directly to the template default. Agents now update only the stubs during onboarding; infrastructure fields survive intact.
 
 **Rule**: Any field the `/onboard` workflow writes must be stubbed in the template default. Onboarding = fill in stubs, not rewrite file.
+
+## L13: Follow SemVer strictly — patch, minor, major (2026-04-14)
+
+DarkFact must use `major.minor.patch` versioning:
+- **Patch** (`x.x.N`): Bug fixes, typo corrections, broken wiring, version string drift. No new features.
+- **Minor** (`x.N.0`): New backwards-compatible features (new soul types, new workflow steps, new agent capabilities).
+- **Major** (`N.0.0`): Breaking changes (restructured `.agent/` layout, renamed core files, changed brain schema).
+
+**v1.1.1 was skipped** — bug fixes landed in v1.2.0 without a patch tag. Don't repeat. Tag every release immediately after pushing. Use `git tag vX.Y.Z && git push origin vX.Y.Z`.
