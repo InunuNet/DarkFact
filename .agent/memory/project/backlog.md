@@ -5,18 +5,22 @@
 ### Bugs
 - [x] **BUG: `profile.json` not updated during onboarding** — fixed in v1.2.6: Step 5 now has explicit `python3` atomic update command with FILL_IN placeholders and inline comments for security_rules/style_guide.
 - [x] **BUG: `onboarding_complete` flag never set to `true`** — fixed in v1.2.6: new Step 9 sets it as the final named action.
-- [ ] **BUG: Step 6 (Activate rules) has no executable commands** — bash comments only, no actual file operations. Pre-existing ambiguity flagged by QA. Low priority.
+- [x] **BUG: Step 6 (Activate rules) has no executable commands** — fixed: real symlink commands added for security.md and style_guide.md into .claude/rules/.
+- [x] **BUG: `/boot` command doesn't work** — fixed in v1.2.7: `.agent/skills/boot.md` created, SessionStart hooks upgraded on Claude Code (auto-prompt) and Gemini CLI (echo reminder).
 
 ### Hardening
-- [ ] **ARCHITECTURE: Checkpoint pattern for crash resilience** — each workflow step should write state before moving to next. Crash = resume from last checkpoint. Document the pattern.
-- [ ] **DOCS: Headless fallback for long tasks** — document `claude -p` / `gemini -p` as a resilience pattern. Recommend session length budgets.
-- [ ] **DOCS: Per-provider parallelism capability** — Claude Code + Gemini CLI support native parallel subagents. Antigravity is sequential only. Document this in agent team docs.
+- [x] **ARCHITECTURE: Checkpoint pattern for crash resilience** — documented in workflows/checkpoint.md, wired into onboard.md (crash recovery check + step 5 checkpoint + step 9 cleanup).
+- [x] **DOCS: Headless fallback for long tasks** — documented in workflows/headless.md with provider comparison, session budgets, and checkpoint integration.
+- [x] **DOCS: Per-provider parallelism capability** — documented in workflows/parallelism.md with capability matrix and per-provider patterns.
 
 ### Features
-- [ ] **FEATURE: `soul_type` field in profile.json** — separate from `project_type`. Add stub to template default.
-- [ ] **FEATURE: `session_log.md` pattern** — rolling session log in `memory/project/` for long-running projects (observed in ZOHO's 16 session summaries).
-- [ ] **FEATURE: `status: archive` in profile.json** — for superseded workspaces (SysMonitor vs SysMon pattern). Warn during boot if status=archive.
+- [x] **FEATURE: `soul_type` field in profile.json** — added stub to template default, wired into onboard Step 5, surfaced in boot identity check.
+- [x] **FEATURE: `session_log.md` pattern** — rolling 20-entry log in memory/project/, wired into Stop hook and boot recall. First entry written.
+- [x] **FEATURE: `status: archive` in profile.json** — stub added to template default, boot skill warns if status=archive before proceeding.
 - [ ] **FEATURE: `markitdown` recommended addon** — document PDF→Markdown conversion for research/legal soul types.
+
+- [ ] **TEST: Smoke test all 3 CLIs** — test plan written in workflows/smoke_test.md (T1-T5). Run manually against fresh project. Results table at bottom of smoke_test.md.
+- [x] **FEATURE: `darkfact()` shell function — CLI picker** — updated ~/.zshrc: now presents Claude Code | Gemini CLI | Codex | Terminal with binary presence check for each.
 
 ## Cross-Platform (Deferred — Low Priority)
 

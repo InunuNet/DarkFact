@@ -8,6 +8,23 @@ Run the full DarkFact boot sequence. Use this at session start or any time you n
 
 ## Steps
 
+### 0. Check workspace status
+
+```bash
+cat .agent/profile.json | python3 -c "
+import sys, json
+p = json.load(sys.stdin)
+status = p.get('status', 'active')
+if status == 'archive':
+    print('⚠️  WARNING: This workspace is ARCHIVED. It has been superseded.')
+    print('   Check goals.md for the replacement project.')
+else:
+    print('✅ Status: active')
+"
+```
+
+If status is `archive` → warn the user before proceeding. Do not stop — archived projects can still be worked on.
+
 ### 1. Verify workspace boundary
 
 ```bash

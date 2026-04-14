@@ -9,6 +9,8 @@
     "opencode"
   ],
   "primary_platform": "claude-code",
+  "status": "active",
+  "_comment_status": "Workspace lifecycle: active | archive. Set to archive for superseded workspaces — boot will warn.",
   "_comment_onboarding": "Fields below are populated by /onboard. Do not remove stubs.",
   "onboarding_complete": false,
   "project_name": "",

@@ -69,6 +69,44 @@ The default `profile.json` contained only template infrastructure fields (`name`
 
 **Rule**: Any field the `/onboard` workflow writes must be stubbed in the template default. Onboarding = fill in stubs, not rewrite file.
 
+## L14: Claude Code hook `type: "agent"` is invalid (2026-04-14)
+
+Claude Code only supports two hook types: `"command"` (runs a shell command) and `"prompt"` (sends a prompt to the current model). The `"agent"` type doesn't exist — it causes a `Settings Error: prompt: Expected string, but received undefined` at session start, and **the entire settings.json is skipped** (hooks + permissions both lost).
+
+**Fix**: Replace `type: "agent"` Stop hooks with `type: "prompt"` containing the maintainer instructions inline. Fixed in DarkFact template, Mlilo, and PortPulse (v1.2.6).
+
+**Rule**: Always validate hook types against https://code.claude.com/docs/en/hooks before shipping.
+
+## L18: DarkFact hooks are already project-scoped — global settings are clean (2026-04-14)
+
+The Stop/SessionStart hooks in `.claude/settings.json` inside the DarkFact project dir are project-level. Claude Code merges global + project settings at runtime. Global `~/.claude/settings.json` contains only PAI hooks — no DarkFact bleed. No config change needed; the setup was already correct.
+
+**Rule**: Before moving hooks between global and project settings, read both files and verify the actual merge behavior. Don't assume global = everywhere until confirmed.
+
+## L19: Stop hook fires on every response stop, not just true session end (2026-04-14)
+
+Claude Code's `Stop` hook fires whenever the model stops generating — which includes mid-conversation pauses, not only when the user closes the session. This means the maintainer wrap-up prompt fires repeatedly. Wrap-up must be run on every firing, not deferred to "real" session end.
+
+**Rule**: Treat every Stop hook as a potential session end. Run wrap-up immediately when the hook fires — don't queue it.
+
+## L17: Checkpoint pattern belongs in workflows/, not skills/ (2026-04-14)
+
+Crash resilience via scratch-file checkpoints is a workflow concern, not a skill. The canonical doc lives in `workflows/checkpoint.md`. Workflows that are long, multi-step, or write files (onboard, update-template) get wired in. Read-only or atomic workflows (boot, wrap-up, report-bug) don't need it.
+
+**Rule**: Before adding checkpoints to a workflow, check the table in `checkpoint.md` — if it's not listed as needing them, don't add them.
+
+## L15: /boot was a workflow, not a skill — slash commands need .agent/skills/ (2026-04-14)
+
+`/boot` was listed in CLAUDE.md section 6 as a workflow but lived only in `workflows/boot.md`. Slash commands (`/cmd`) only resolve from `.agent/skills/` (or the platform-specific symlink). The fix: create `.agent/skills/boot.md` as the canonical skill file. The `workflows/` version becomes documentation/fallback for Antigravity.
+
+**Rule**: Any `/command` listed in CLAUDE.md must have a corresponding file in `.agent/skills/`. Workflows are for multi-step orchestration docs, not slash-command dispatch.
+
+## L16: Claude Code SessionStart hook supports `type: "prompt"` — use it for auto-boot (2026-04-14)
+
+Claude Code's `SessionStart` hook accepts both `type: "command"` (shell) and `type: "prompt"` (sends a prompt to the model). This means boot can be fully automated on session start without user intervention. Gemini CLI only supports `command` type — use a shell echo as a reminder instead.
+
+**Rule**: For cross-platform auto-boot, use `prompt` hook on Claude Code, `command` echo reminder on Gemini, manual `/boot` on Codex/Antigravity.
+
 ## L13: Follow SemVer strictly — patch, minor, major (2026-04-14)
 
 DarkFact must use `major.minor.patch` versioning:
