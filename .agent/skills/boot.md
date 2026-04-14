@@ -23,6 +23,17 @@ If `WORKSPACE` is missing or names don't match the directory → **STOP**. Tell 
 python3 execution/brain.py last-session --quiet
 ```
 
+Also show the most recent session_log entry:
+```bash
+python3 -c "
+import re
+content = open('.agent/memory/project/session_log.md').read()
+entries = re.split(r'(?=^## \d{4})', content, flags=re.MULTILINE)
+entry = next((e.strip() for e in entries if e.startswith('## ')), None)
+print(entry or 'No session log entries yet')
+" 2>/dev/null || true
+```
+
 ### 3. KI recall (cross-project patterns)
 
 ```bash

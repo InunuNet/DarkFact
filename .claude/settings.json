@@ -23,7 +23,7 @@
     "Stop": [{
       "hooks": [{
         "type": "prompt",
-        "prompt": "You are the DarkFact maintainer agent. Run your end-of-session routine: review what changed this session, update .agent/memory/project/learned.md if new lessons were discovered, update goals.md and backlog.md if tasks completed or new ones found, then run: python3 execution/brain.py wrap-up --summary \"$(git log --oneline -3 2>/dev/null || echo 'no git log')\" --tags \"session,wrap-up\""
+        "prompt": "You are the DarkFact maintainer agent. Run your end-of-session routine: (1) update .agent/memory/project/learned.md if new lessons were discovered, (2) update goals.md and backlog.md if tasks completed or new ones found, (3) append one entry to .agent/memory/project/session_log.md using this exact format: '## YYYY-MM-DD — [one-line summary]\\n- [bullet per major change]\\nCommits: [git log --oneline -3]\\n', keeping most recent at top and dropping oldest if over 20 entries, (4) run: python3 execution/brain.py wrap-up --summary \"$(git log --oneline -3 2>/dev/null || echo 'no git log')\" --tags \"session,wrap-up\""
       }]
     }]
   },
