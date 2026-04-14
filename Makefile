@@ -1,9 +1,9 @@
-# DarkFact v1.2.1 Makefile
+# DarkFact v1.1.0 Makefile
 
 .PHONY: help sync-agents brain-export brain-import brain-stats commit audit test update-template onboard check-feedback
 
 help:
-	@echo "🏭 DarkFact v1.2.1"
+	@echo "🏭 DarkFact v1.1.0"
 	@echo ""
 	@echo "  Project Setup"
 	@echo "  make onboard           Start AI-guided project onboarding"
@@ -54,10 +54,19 @@ test:
 	@echo "✅ All tests passed"
 
 update-template:
-	@echo "🔄 Fetching latest DarkFact template..."
+	@# GUARD: This target is for DOWNSTREAM projects only.
+	@# It pulls FROM DarkFact. It must NEVER run inside the DarkFact repo itself.
+	@if [ -f ".agent/profile.json" ] && python3 -c "import json,sys; p=json.load(open('.agent/profile.json')); sys.exit(0 if p.get('project_name')=='DarkFact' else 1)" 2>/dev/null; then \
+		echo "❌ ABORT: You are inside the DarkFact template repo."; \
+		echo "   This command is for DOWNSTREAM projects (Mumbl AI, LanScout, etc.)"; \
+		echo "   To update DarkFact itself, push directly: git add . && git commit && git push"; \
+		exit 1; \
+	fi
+	@echo "🔄 Pulling latest DarkFact template into this project..."
+	@echo "   (This ONLY pulls. It never modifies or commits to InunuNet/DarkFact)"
 	@git fetch darkfact-upstream --quiet 2>/dev/null && \
-		echo "✅ Fetched. Review changes: git log darkfact-upstream/main --oneline -10" || \
-		echo "⚠️  Could not reach upstream. Check network or: git remote -v"
+		echo "✅ Fetched. Review: git log darkfact-upstream/main --oneline -10" || \
+		echo "⚠️  Could not reach upstream. Check: git remote -v"
 
 onboard:
 	@echo "🏭 Starting onboarding..."
