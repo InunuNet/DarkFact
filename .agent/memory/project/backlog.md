@@ -43,6 +43,18 @@
 - [ ] Python-based YAML parser for sync_agents.sh (L6 fix)
 - [ ] Install `gh` CLI prompt in `darkfact()` if not present
 
+## Insights from Migration (v3.x → v1.1.0 Fleet)
+
+> Patterns observed across 16 real projects. Feed these into template improvements.
+
+- [ ] **FEATURE: Expand soul type heuristics in `/onboard`** — current onboard.md only covers 5 types. Fleet revealed 8 distinct souls needed: `devops` (HomeClaw, wh3), `financial` (ZOHO), `legal` (GJ Dauth Estate), `security` (Phising Attack Back), `fleet-manager` (ai.inunu.net), `av-consultant` (NWU Tender), `research` (PAI). Add these to the stack heuristics table.
+- [ ] **FEATURE: Expand `project_type` enum** — add: `devops`, `financial`, `legal`, `security`, `research`, `fleet`. The `general` fallback is too broad.
+- [ ] **FEATURE: `soul_type` field in profile.json** — separate from `project_type`. Lets the agent know the persona domain even when the tech stack changes.
+- [ ] **INSIGHT: ZOHO multi-session-summary pattern** — ZOHO had 16 session summaries (v1–v16) in memory/project/. This is a useful pattern for long-running projects — a rolling session log in addition to brain wrap-up. Consider adding a `session_log.md` to the memory structure.
+- [ ] **INSIGHT: SysMonitor vs SysMon** — two projects for one product = workspace sprawl. DarkFact should warn or recommend archiving superseded workspaces. Add `status: archive` to profile.json spec and document the convention.
+- [ ] **INSIGHT: ai.inunu.net fleet management** — managing 6 bots (Dadb0t, Momb0t, etc.) from one workspace. Fleet management is a real DarkFact use case. PAI research should explore a `fleet` mode where one workspace coordinates many agents.
+- [ ] **INSIGHT: NWU Tender used markitdown** — document conversion (PDF → Markdown) is a recurring need across research projects. Add `markitdown` as a recommended addon in the docs/research soul type.
+
 ## DONE
 
 - [x] DarkFact v1.0.0 — 66 files, 7 agents, native hooks, brain
