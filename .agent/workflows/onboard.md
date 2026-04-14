@@ -75,12 +75,16 @@ Initial feature breakdown:
 - Phase 3: Testing + documentation
 
 #### `.agent/profile.json`
-Update with:
+> ⚠️ Update ONLY the stub fields that already exist — do NOT rewrite the file.
+> Preserve all infrastructure fields (`agents`, `memory`, `platforms`, `features.brain`, etc.)
+
+Stub fields to update (they already exist with empty/false defaults):
+- `project_name`: the project directory name
 - `project_type`: one of `macos`, `webapp`, `python`, `api`, `mobile`, `research`, `general`
+- `tech_stack`: array of technologies chosen
 - `features.security_rules`: true/false
 - `features.style_guide`: true/false
-- `onboarding_complete`: true
-- `tech_stack`: array of technologies chosen
+- `onboarding_complete`: set to `true` (last action — confirms onboarding succeeded)
 
 #### `.agent/identity/soul.md`
 Rewrite to match the project domain:
