@@ -58,8 +58,8 @@
 - [ ] **INSIGHT: Parallelism is Antigravity-specific** — Antigravity agents cannot spawn parallel child agents (sequential orchestration only). Claude Code and Gemini CLI both support native parallel subagents. Document per-provider parallelism capability in the agent team docs so teams know what's available in their tool.
 
 ## GitHub Issues (Pending)
-- [ ] **ISSUE #3: `ki_recall.py` not wired** — Either wire it into the boot sequence or remove it entirely if superseded.
-- [ ] **ISSUE #3: `security_rules` & `style_guide` undiscoverable** — Provide opt-in prompts during the `/onboard` workflow.
+- [x] **ISSUE #3: `ki_recall.py` not wired** — Fixed: wired into `boot.md` Step 2 (non-blocking KI recall before brain).
+- [x] **ISSUE #3: `security_rules` & `style_guide` undiscoverable** — Fixed: `onboard.md` Step 4 now surfaces rule content and requires explicit yes/no from user.
 - [x] **ISSUE #3: Version string drift** — Fixed: Makefile updated to `v1.1.0`. Issue #3 closed.
 
 ## DONE
