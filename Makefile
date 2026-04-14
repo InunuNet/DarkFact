@@ -55,18 +55,43 @@ test:
 
 update-template:
 	@# GUARD: This target is for DOWNSTREAM projects only.
-	@# It pulls FROM DarkFact. It must NEVER run inside the DarkFact repo itself.
+	@# It pulls FROM GitHub (InunuNet/DarkFact). Never from the local ~/ai/DarkFact folder.
 	@if [ -f ".agent/profile.json" ] && python3 -c "import json,sys; p=json.load(open('.agent/profile.json')); sys.exit(0 if p.get('project_name')=='DarkFact' else 1)" 2>/dev/null; then \
 		echo "❌ ABORT: You are inside the DarkFact template repo."; \
 		echo "   This command is for DOWNSTREAM projects (Mumbl AI, LanScout, etc.)"; \
-		echo "   To update DarkFact itself, push directly: git add . && git commit && git push"; \
+		echo "   To update DarkFact itself: git add . && git commit && git push"; \
 		exit 1; \
 	fi
-	@echo "🔄 Pulling latest DarkFact template into this project..."
-	@echo "   (This ONLY pulls. It never modifies or commits to InunuNet/DarkFact)"
-	@git fetch darkfact-upstream --quiet 2>/dev/null && \
-		echo "✅ Fetched. Review: git log darkfact-upstream/main --oneline -10" || \
-		echo "⚠️  Could not reach upstream. Check: git remote -v"
+	@# VERIFY: remote must point to GitHub, not a local path
+	@UPSTREAM=$$(git remote get-url darkfact-upstream 2>/dev/null); \
+	if [ -z "$$UPSTREAM" ]; then \
+		echo "❌ darkfact-upstream remote not set. Run:"; \
+		echo "   git remote add darkfact-upstream https://github.com/InunuNet/DarkFact.git"; \
+		exit 1; \
+	fi; \
+	if echo "$$UPSTREAM" | grep -q "^/\|^\.\|file://"; then \
+		echo "❌ darkfact-upstream points to a LOCAL path: $$UPSTREAM"; \
+		echo "   Fix it: git remote set-url darkfact-upstream https://github.com/InunuNet/DarkFact.git"; \
+		exit 1; \
+	fi; \
+	echo "✅ Remote: $$UPSTREAM"
+	@echo "🔄 Fetching from GitHub..."
+	@git fetch darkfact-upstream --quiet
+	@echo ""
+	@echo "📋 DarkFact files changed since your last pull:"
+	@git diff HEAD darkfact-upstream/main -- \
+		'.agent/workflows/' '.agent/agents/' '.agent/rules/' '.agent/skills/' \
+		'execution/' 'AGENTS.md' 'Makefile' '.agent/version' 2>/dev/null | \
+		grep '^diff --git' | sed 's/diff --git a\//  • /' | sed 's/ b\/.*//' || \
+		echo "  (no infrastructure changes)"
+	@echo ""
+	@echo "⚡ To apply specific files (example):"
+	@echo "   git checkout darkfact-upstream/main -- .agent/workflows/boot.md"
+	@echo "   git checkout darkfact-upstream/main -- .agent/agents/maintainer.md"
+	@echo ""
+	@echo "📌 Never run: git merge darkfact-upstream/main"
+	@echo "   (That would overwrite your project-specific files)"
+
 
 onboard:
 	@echo "🏭 Starting onboarding..."
