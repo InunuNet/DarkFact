@@ -15,6 +15,8 @@
 - [ ] **OBSERVATION: Antigravity crashes mid-long-session** — "high traffic" API errors terminate the agent. Template needs crash-resilient design: each onboarding step writes its output immediately before moving to the next step (checkpoint pattern), not at the end.
 - [ ] **PROCESS: Test runs must OBSERVE not FIX** — when something fails during a DarkFact test, log it here, don't fix it live. The DarkFact coordinator session won't always be running. Feedback loop: test → observe → log → fix in next DarkFact session.
 - [ ] **ARCHITECTURE: Native-first is fragile under API rate limits** — the old Dark Factory CLI daemon queued and retried tasks even when the UI hit quotas/errors. Native hooks (Claude Stop, Gemini SessionEnd) die with the UI session. DarkFact v1.1.0 has no retry layer. Consider: headless `claude -p` / `gemini -p` for long-running tasks as a resilience pattern, or a lightweight local task queue (a simple JSON file + cron) that survives UI crashes. This is the one real loss from going native-first.
+- [ ] **BUG: `darkfact()` scaffold sets wrong remote name** — PortPulse ends up with `origin` pointing at `InunuNet/DarkFact` instead of the user's own repo. The scaffold should name the template remote `darkfact-upstream` and leave `origin` empty (to be set by user). Bug in `darkfact()` shell function in `~/.zshrc`.
+- [ ] **CONFIRMED: `profile.json` bug is template-level** — affects every project scaffolded from DarkFact v1.1.0. The `/onboard` skill writes goals/backlog/soul/user/rules but never updates `profile.json`. PortPulse can (and should) file this via `/report-bug` against `InunuNet/DarkFact` — this is exactly the feedback loop the template is designed for.
 
 ## Cross-Platform Compatibility
 
