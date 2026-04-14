@@ -47,8 +47,26 @@ Based on the goal, apply these heuristics:
 | Mobile app | React Native | Flutter |
 | Data analysis | Python (pandas, jupyter) | R |
 | Research / scraping | Python | n/a |
+| DevOps / infra | Bash/Python + YAML | Ansible, Terraform |
+| Financial / accounting | Python + CSV/API | n/a |
+| Legal / documents | Python + markitdown | n/a |
+| Security / audit | Python + CLI tools | n/a |
+| Fleet / multi-agent | DarkFact native | n/a |
 
-Present 1-2 options max. Explain WHY in plain terms. Ask user to confirm.
+Also determine the **soul type** — the agent's persona domain, independent of tech stack:
+
+| Soul type | Use when |
+|-----------|----------|
+| `engineer` | Building software (default) |
+| `devops` | Infrastructure, deployments, CI/CD |
+| `financial` | Accounting, reconciliation, invoicing |
+| `legal` | Contracts, compliance, estates |
+| `security` | Pentesting, auditing, threat modelling |
+| `av-consultant` | AV/IT installation projects |
+| `fleet-manager` | Managing multiple bots or workspaces |
+| `researcher` | Research, analysis, literature review |
+
+Present 1-2 stack options max. Explain WHY in plain terms. Ask user to confirm.
 
 ### 4. Determine and confirm project rules
 
@@ -96,7 +114,8 @@ Initial feature breakdown:
 
 Stub fields to update (they already exist with empty/false defaults):
 - `project_name`: the project directory name
-- `project_type`: one of `macos`, `webapp`, `python`, `api`, `mobile`, `research`, `general`
+- `project_type`: one of `macos`, `webapp`, `python`, `api`, `mobile`, `research`, `devops`, `financial`, `legal`, `security`, `fleet`, `general`
+- `soul_type`: the agent persona domain (see heuristics table above)
 - `tech_stack`: array of technologies chosen
 - `features.security_rules`: true/false
 - `features.style_guide`: true/false

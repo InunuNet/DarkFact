@@ -1,7 +1,7 @@
 {
   "name": "DarkFact",
   "description": "Provider-agnostic agentic workspace template",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "template",
   "platforms": ["claude-code", "gemini-cli", "opencode"],
   "primary_platform": "claude-code",
@@ -10,6 +10,9 @@
   "onboarding_complete": false,
   "project_name": "",
   "project_type": "",
+  "_comment_project_type": "enum: macos, webapp, python, api, mobile, research, devops, financial, legal, security, fleet, general",
+  "soul_type": "",
+  "_comment_soul_type": "agent persona domain, independent of tech stack — e.g. devops, financial, legal, av-consultant, fleet-manager",
   "tech_stack": [],
 
   "features": {

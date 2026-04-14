@@ -46,7 +46,7 @@ python3 execution/ki_recall.py "PROJECT_TYPE_OR_TOPIC" --n 3
 python3 execution/brain.py recall "CURRENT_TASK" --n 3
 ```
 
-4. **Check GitHub for user feedback** (DarkFact sessions only):
+5. **Check GitHub for user feedback** (DarkFact sessions only):
 ```bash
 make check-feedback
 ```
