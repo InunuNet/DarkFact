@@ -28,12 +28,20 @@ Please open [OTHER PROJECT] in its **own separate IDE window** so it gets its ow
 python3 execution/brain.py last-session
 ```
 
-2. **Read project context**:
+2. **Check Antigravity KI store** for cross-project patterns relevant to this project:
+```bash
+python3 execution/ki_recall.py "PROJECT_TYPE_OR_TOPIC" --n 3
+```
+> Non-blocking — if no KIs found, proceed. KIs surface reusable patterns from past work
+> (e.g., "SwiftUI audio pipeline", "FastAPI async", "Ubuntu systemd").
+> Skip if `~/.gemini/antigravity/knowledge/` is empty.
+
+3. **Read project context**:
 - `.agent/memory/project/goals.md`
 - `.agent/memory/project/learned.md`
 - `.agent/memory/project/backlog.md` (if exists)
 
-3. **Check brain for relevant memories**:
+4. **Check brain for relevant memories**:
 ```bash
 python3 execution/brain.py recall "CURRENT_TASK" --n 3
 ```

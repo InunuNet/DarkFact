@@ -50,13 +50,29 @@ Based on the goal, apply these heuristics:
 
 Present 1-2 options max. Explain WHY in plain terms. Ask user to confirm.
 
-### 4. Determine project rules
+### 4. Determine and confirm project rules
 
-Based on the stack and goal, decide which rules to activate:
+Based on the stack and goal, decide which rules to activate — then **present them to the user and ask for confirmation**. Do not silently enable rules.
 
-- **Security rules**: enable if: web app, API, handles user data, network access
-- **Style guide**: enable if: any UI (web, macOS, mobile)
-- **CLI rules**: enable only if project is a CLI/server tool
+**Decision logic:**
+- **Security rules** → enable if: web app, API, user data, network access, or any auth
+- **Style guide** → enable if: any UI (web, macOS, mobile, desktop)
+
+**For each rule you plan to enable, tell the user what it does:**
+
+> If enabling security rules, say:
+> "🔒 **Security rules**: I'll add guardrails that require confirmation before dangerous commands
+> (`rm -rf`, `git push --force`, curl-pipe installs), block reading SSH/credential files,
+> and enforce secrets management (no `.env` commits, use sops+age encryption).
+> Enable this? [yes/no]"
+
+> If enabling style guide, say:
+> "🎨 **Style guide**: I'll add UI/design rules — Google Fonts, HSL color system (no plain
+> red/blue/green), dark-mode-first layouts, hover animations, glassmorphism cards,
+> and CSS Grid/Flexbox conventions.
+> Enable this? [yes/no]"
+
+Set `features.security_rules` and `features.style_guide` in `profile.json` based on the user's answers.
 
 ### 5. Write project context files
 
