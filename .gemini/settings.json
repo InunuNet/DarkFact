@@ -1,7 +1,7 @@
 {
   "hooks": {
     "SessionStart": [{
-      "command": "python3 execution/brain.py last-session --quiet 2>/dev/null || true"
+      "command": "python3 execution/brain.py last-session --quiet 2>/dev/null || true && echo '\\n▶ Run /boot to load full context (workspace, goals, learned, backlog, git remotes)'"
     }],
     "SessionEnd": [{
       "command": "echo '\\n💾 Wrap up: python3 execution/brain.py wrap-up -s \"summary\" -t \"tags\"'"

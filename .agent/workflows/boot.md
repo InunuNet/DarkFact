@@ -70,4 +70,8 @@ Every project must have exactly two remotes:
 > 🐛 **Reporting bugs**: Template/workflow bug → report to `InunuNet/DarkFact` via `/report-bug`
 > Project bug → create an issue in your own repo (`origin`)
 
-> **Note**: In Claude Code and Gemini CLI, the SessionStart hook runs steps 1-2 automatically. This workflow is for Antigravity and manual use.
+> **Platform notes:**
+> - **Claude Code**: SessionStart hook auto-runs brain recall + prompts `/boot`. Also available manually as `/boot`.
+> - **Gemini CLI**: SessionStart hook runs brain recall + prints `/boot` reminder. Run `/boot` manually.
+> - **Codex / OpenCode**: No hooks — run `/boot` manually at session start. This skill file is loaded from `.agent/skills/boot.md`.
+> - **Antigravity**: No hooks — run `/boot` manually. Falls back to reading this file directly.

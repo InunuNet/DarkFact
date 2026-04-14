@@ -15,12 +15,15 @@
       "hooks": [{
         "type": "command",
         "command": "python3 execution/brain.py last-session --quiet 2>/dev/null || true"
+      }, {
+        "type": "prompt",
+        "prompt": "Run /boot now — execute every step in .agent/skills/boot.md. Verify workspace, recall last session, read goals.md + learned.md + backlog.md, check git remotes, then report status."
       }]
     }],
     "Stop": [{
       "hooks": [{
-        "type": "agent",
-        "agent": "maintainer"
+        "type": "prompt",
+        "prompt": "You are the DarkFact maintainer agent. Run your end-of-session routine: review what changed this session, update .agent/memory/project/learned.md if new lessons were discovered, update goals.md and backlog.md if tasks completed or new ones found, then run: python3 execution/brain.py wrap-up --summary \"$(git log --oneline -3 2>/dev/null || echo 'no git log')\" --tags \"session,wrap-up\""
       }]
     }]
   },
