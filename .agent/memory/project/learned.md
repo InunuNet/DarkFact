@@ -60,3 +60,11 @@ Going native-first (hooks, skills, workflows) is the right call for simplicity a
 3. **Lightweight local queue** — JSON task file + cron/launchd. Only if 1+2 are insufficient.
 
 Rule: native-first for sessions, checkpoints for resilience.
+
+## L12: profile.json conflates template metadata with project config (2026-04-14)
+
+The default `profile.json` contained only template infrastructure fields (`name`, `description`, `version`, `platforms`, `agents`, `memory`). The `/onboard` workflow then instructed agents to update it with project fields (`onboarding_complete`, `project_type`, `tech_stack`, etc.) — but since no stubs existed, agents fully overwrote the file, discarding all infrastructure config.
+
+**Fix applied**: Added onboarding stub fields (`onboarding_complete: false`, `project_name: ""`, `project_type: ""`, `tech_stack: []`) directly to the template default. Agents now update only the stubs during onboarding; infrastructure fields survive intact.
+
+**Rule**: Any field the `/onboard` workflow writes must be stubbed in the template default. Onboarding = fill in stubs, not rewrite file.
