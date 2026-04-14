@@ -1,10 +1,18 @@
 
-## Version Bump Rule (2026-04-12)
-Every change to the workspace template MUST include a version bump in `.agent/version`.
-Use semantic-ish versioning: major.minor (e.g. 3.4 → 3.5).
-This ensures downstream projects detect stale factory versions at boot.
+## Project-Specific Rules
 
-## Non-Blocking Dispatch Rule (2026-04-12)
-NEVER use `--watch` or blocking polls in interactive sessions.
-Pattern: dispatch (fire-and-forget) → stay responsive → quick `--result` check later.
-The daemon posts to comms.db on completion — check `inbox` instead of blocking.
+_Generated during `/onboard`. These override core rules when they conflict._
+
+<!-- Example — deleted during onboarding and replaced with stack-specific rules:
+
+## Swift/macOS Rules
+- Use @Observable over ObservableObject (Swift 5.9+)
+- Prefer native frameworks: SwiftUI, Network.framework, AppKit
+- Target: macOS 14 Sonoma minimum
+
+## Python Rules
+- Type hints everywhere
+- Use typer for CLIs, FastAPI for APIs
+- Test with pytest
+
+-->

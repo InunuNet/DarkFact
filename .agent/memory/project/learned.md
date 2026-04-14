@@ -26,4 +26,28 @@ The vector DB brain actually works. Boot recall returned relevant memories. Wrap
 
 ## L4: Premature execution destroys context (2026-04-14)
 
-A previous session ran cleanup + creation before the plan was approved. This deleted files that were needed (5 Gemini agents from Phase 1) and left the workspace in a half-state. Always plan first, execute after explicit approval.
+A previous session ran cleanup + creation before the plan was approved. This deleted files that were needed and left the workspace in a half-state. Always plan first, execute after explicit approval.
+
+## L5: Bash associative arrays break on macOS zsh (2026-04-14)
+
+`declare -A` in bash works, but when scripts run via `bash script.sh` on macOS the default `set -u` catches empty arrays as unbound. Use `case` statements instead for cross-shell compatibility. Also use `|| true` on grep calls that might return empty.
+
+## L6: sync_agents.sh is fragile with YAML parsing (2026-04-14)
+
+Parsing YAML frontmatter with sed/grep works for simple cases but breaks on multiline descriptions. Future: consider a Python-based parser or yq if YAML gets complex.
+
+## L7: Rule isolation is critical for template adoption (2026-04-14)
+
+When users initialise a project from DarkFact, the template's own rules (CLI First, backend/CLI god persona) bleed into the project context and cause contradictions — e.g. a SwiftUI project told to avoid browser UIs. Fix: `core.md` must be domain-agnostic. `soul.md` and `user.md` must be templates rewritten during `/onboard`. Project-specific rules live in `memory/project/rules.md` and always take precedence.
+
+## L8: Onboarding is UX, not infra (2026-04-14)
+
+The original `init.sh` asked technical Bash questions ("Do you use external LLM APIs?"). Users are not sysadmins. Split onboarding: `init.sh` = pure scaffolding (dirs, git, symlinks), `/onboard` = AI conversation that asks for the goal in plain language and recommends a stack. The LLM IS the UX.
+
+## L9: Upstream feedback needs zero friction (2026-04-14)
+
+Template users won't report bugs if it requires navigating GitHub manually. The `/report-bug` workflow uses `gh` CLI to create issues in one step, with context auto-captured (template version, platform, project type). Falls back to a formatted local file if `gh` isn't available.
+
+## L10: darkfact() shell function is the entry point (2026-04-14)
+
+The `anti()` function pointed to a dead path (`/ai/Workspace Template/execution/new_project.py`). The new `darkfact()` function copies the template, resets git, adds the upstream remote, and presents an IDE picker (Antigravity/Claude/Terminal). This is how non-technical users start projects.

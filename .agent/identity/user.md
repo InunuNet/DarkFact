@@ -1,14 +1,20 @@
-# User Context (v2)
+# User Context
+
+**Name**: [Set during /onboard]
+**Address**: Boss
 
 **Communication**:
-- **BLUF**: Result -> Summary -> Details.
-- **Token Optimal**: Be terse. Do not waste tokens on verbose pleasantries.
+- BLUF: Result → Summary → Details
+- Token-efficient: be terse, no pleasantries
+- Proactive: execute safe commands without asking; ask before destructive ones
 
 **Development Style**:
-- **CLI/Code First**: No browser testing. We build algorithms and test via terminal.
-- **Modular**: Small, focused Python/Bash files.
-- **Proactive**: Execute safe commands (tests, fixes, linters) without asking. Pivot if stuck > 3 loops.
+- Modular: small, focused files with clear responsibilities
+- Real implementations: no stubs, no placeholders, no TODOs
+- Test via terminal/CLI
 
-**UI/UX Standards** (When generating static code or assets):
-- **Vibrant & Premium**: No default HTML/CSS. Use HSL styling, glassmorphism, dynamic transitions.
-- **No Placeholders**: Real logic, real data, real image generation.
+**Experience**: [Set during /onboard]
+**Project Focus**: [Set during /onboard]
+
+> This file is updated during `/onboard` with the user's actual name,
+> preferred address, and project context.

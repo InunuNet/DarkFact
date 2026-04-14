@@ -4,27 +4,50 @@ description: Initialize a new project workspace from the DarkFact template
 
 # Init
 
+> **For new projects**: Use `darkfact` from the terminal — it clones the template,
+> resets git, and opens your IDE. Then run `/onboard` inside your AI agent.
+>
+> **Already have a `DarkFact` clone?** Run `bash init.sh` to re-scaffold.
+
 ## Steps
 
-1. **Run the scaffolding script**:
+### 1. Scaffold the workspace
+
 ```bash
 bash init.sh
 ```
 
-2. **Verify the workspace**:
-```bash
-ls .agent/agents/ .agent/rules/ .agent/memory/project/
-python3 -c "import json; json.load(open('.claude/settings.json'))"
-python3 -c "import json; json.load(open('.gemini/settings.json'))"
-test -L CLAUDE.md && test -L GEMINI.md && echo "Symlinks OK"
+This creates:
+- `.agent/` — agents, rules, memory, workflows, skills
+- `execution/` — brain.py, sync_agents.sh
+- `.gitignore`, symlinks, git remote to DarkFact upstream
+
+### 2. Start onboarding
+
+In your AI agent (Antigravity, Claude Code, or Gemini CLI):
+```
+/onboard
 ```
 
-3. **Sync agents to platforms**:
+Vex will guide you through:
+- Defining your project goal
+- Choosing a tech stack
+- Generating goals, backlog, and project rules
+
+### 3. Verify the workspace
+
 ```bash
-bash execution/sync_agents.sh
+make audit
 ```
 
-4. **Test brain**:
+### 4. Sync agents
+
+```bash
+make sync-agents
+```
+
+### 5. Test brain
+
 ```bash
 python3 execution/brain.py stats
 ```

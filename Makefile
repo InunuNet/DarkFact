@@ -1,17 +1,28 @@
 # DarkFact v1.0.0 Makefile
 
-.PHONY: help sync-agents brain-export brain-import brain-stats commit audit test
+.PHONY: help sync-agents brain-export brain-import brain-stats commit audit test update-template onboard
 
 help:
 	@echo "🏭 DarkFact v1.0.0"
 	@echo ""
-	@echo "  make sync-agents    Sync canonical agents → Claude + Gemini"
-	@echo "  make brain-export   Export brain memories to JSON"
-	@echo "  make brain-import   Import brain memories (FILE=path.json)"
-	@echo "  make brain-stats    Show brain statistics"
-	@echo "  make commit         Semantic commit (TYPE=feat MSG='...')"
-	@echo "  make audit          Run workspace health check"
-	@echo "  make test           Run validation suite"
+	@echo "  Project Setup"
+	@echo "  make onboard           Start AI-guided project onboarding"
+	@echo ""
+	@echo "  Agents"
+	@echo "  make sync-agents       Sync canonical agents → Claude + Gemini"
+	@echo ""
+	@echo "  Memory / Brain"
+	@echo "  make brain-export      Export brain memories to JSON"
+	@echo "  make brain-import      Import brain memories (FILE=path.json)"
+	@echo "  make brain-stats       Show brain statistics"
+	@echo ""
+	@echo "  Workflow"
+	@echo "  make commit            Semantic commit (TYPE=feat MSG='...')"
+	@echo "  make audit             Run workspace health check"
+	@echo "  make test              Run validation suite"
+	@echo ""
+	@echo "  Template"
+	@echo "  make update-template   Pull latest DarkFact template updates"
 
 sync-agents:
 	@bash execution/sync_agents.sh
@@ -40,3 +51,14 @@ test:
 	@bash execution/sync_agents.sh
 	@python3 execution/brain.py last-session --quiet
 	@echo "✅ All tests passed"
+
+update-template:
+	@echo "🔄 Fetching latest DarkFact template..."
+	@git fetch darkfact-upstream --quiet 2>/dev/null && \
+		echo "✅ Fetched. Review changes: git log darkfact-upstream/main --oneline -10" || \
+		echo "⚠️  Could not reach upstream. Check network or: git remote -v"
+
+onboard:
+	@echo "🏭 Starting onboarding..."
+	@echo "Open your AI agent and run: /onboard"
+	@echo "Or use the workflow at: .agent/workflows/onboard.md"
