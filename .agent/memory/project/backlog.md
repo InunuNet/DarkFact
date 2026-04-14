@@ -60,7 +60,7 @@
 ## GitHub Issues (Pending)
 - [ ] **ISSUE #3: `ki_recall.py` not wired** — Either wire it into the boot sequence or remove it entirely if superseded.
 - [ ] **ISSUE #3: `security_rules` & `style_guide` undiscoverable** — Provide opt-in prompts during the `/onboard` workflow.
-- [ ] **ISSUE #3: Version string drift** — Update Makefile from `v1.0.0` to `v1.1.0`.
+- [x] **ISSUE #3: Version string drift** — Fixed: Makefile updated to `v1.1.0`. Issue #3 closed.
 
 ## DONE
 
