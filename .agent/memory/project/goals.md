@@ -13,9 +13,11 @@ instead of custom scripts. Config over code.
 3. ~~**Phase 5: Onboarding questionnaire**~~ ✅ `/onboard` workflow + Vex persona
 4. ~~**Rule isolation**~~ ✅ Core rules decoupled from project-specific rules
 5. ~~**Upstream feedback**~~ ✅ `/report-bug` workflow + `make update-template`
-6. **GitHub release** — publish InunuNet/DarkFact, push v1.0.0 tag
+6. ~~**GitHub release**~~ ✅ InunuNet/DarkFact live, v1.0.0 + v1.1.0 tagged
 7. **Cross-platform compatibility** — audit all scripts for Linux/Windows support
-8. **End-to-end test** — validate full lifecycle with PortPulse test project
+8. ~~**End-to-end test**~~ ✅ PortPulse test run complete — 7 bugs logged, feedback loop validated
+9. ~~**Fleet migration**~~ ✅ 16 legacy projects migrated to DarkFact v1.1.0 with crafted souls + goals
+10. **DarkFact v1.2.0** — plan and implement improvements from PortPulse test + migration insights
 
 ## Success Criteria
 
@@ -24,6 +26,7 @@ instead of custom scripts. Config over code.
 - ✅ Zero custom scripts for features that exist natively
 - ✅ Onboarding guides non-technical users to correct tech stack
 - ✅ Template rules don't conflict with project-specific rules
-- [ ] Published on GitHub (InunuNet/DarkFact)
+- ✅ Published on GitHub (InunuNet/DarkFact)
+- ✅ 16 legacy projects migrated to v1.1.0 with crafted context
 - [ ] Tested on Linux + Windows (WSL)
-- [ ] End-to-end test project (PortPulse) validates full pipeline
+- [ ] v1.2.0 improvements from test run + migration built and shipped
