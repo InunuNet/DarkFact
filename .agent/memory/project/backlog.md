@@ -2,6 +2,7 @@
 
 ## In Progress
 
+- [ ] **`/resume` workflow** — detect partial onboarding state and pick up where a crashed session left off
 - [ ] Create GitHub repo (InunuNet/DarkFact) and push v1.0.0
 - [ ] PortPulse end-to-end test case
 
