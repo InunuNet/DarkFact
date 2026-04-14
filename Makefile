@@ -1,6 +1,6 @@
-# DarkFact v1.0.0 Makefile
+# DarkFact v1.1.0 Makefile
 
-.PHONY: help sync-agents brain-export brain-import brain-stats commit audit test update-template onboard
+.PHONY: help sync-agents brain-export brain-import brain-stats commit audit test update-template onboard check-feedback
 
 help:
 	@echo "🏭 DarkFact v1.0.0"
@@ -23,6 +23,7 @@ help:
 	@echo ""
 	@echo "  Template"
 	@echo "  make update-template   Pull latest DarkFact template updates"
+	@echo "  make check-feedback    Check GitHub for new issues + PRs"
 
 sync-agents:
 	@bash execution/sync_agents.sh
@@ -62,3 +63,13 @@ onboard:
 	@echo "🏭 Starting onboarding..."
 	@echo "Open your AI agent and run: /onboard"
 	@echo "Or use the workflow at: .agent/workflows/onboard.md"
+
+check-feedback:
+	@echo "📬 DarkFact GitHub Feedback"
+	@echo ""
+	@/opt/homebrew/bin/gh issue list --repo InunuNet/DarkFact --state open --limit 10 2>/dev/null || \
+		gh issue list --repo InunuNet/DarkFact --state open --limit 10 2>/dev/null || \
+		echo "⚠️  gh CLI not found or not authenticated. Run: brew install gh && gh auth login"
+	@echo ""
+	@echo "💬 Discussions:"
+	@echo "   https://github.com/InunuNet/DarkFact/discussions"

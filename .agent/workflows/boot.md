@@ -21,4 +21,9 @@ python3 execution/brain.py last-session
 python3 execution/brain.py recall "CURRENT_TASK" --n 3
 ```
 
+4. **Check GitHub for user feedback** (DarkFact sessions only):
+```bash
+make check-feedback
+```
+
 > **Note**: In Claude Code and Gemini CLI, the SessionStart hook runs step 1 automatically. This workflow is for Antigravity and manual use.
