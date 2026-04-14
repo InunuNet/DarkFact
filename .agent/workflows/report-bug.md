@@ -4,9 +4,16 @@ description: Report a bug or improvement in the DarkFact template to the upstrea
 
 # Report Bug
 
-> Reports a bug or improvement in the DarkFact template itself (not your project).
-> Uses `gh` CLI to create a GitHub Issue directly. Falls back to a formatted
-> report you can paste manually.
+## Which repo?
+
+> **Before reporting — decide where the bug lives:**
+>
+> | Bug type | Report to | How |
+> |----------|-----------|-----|
+> | Template bug (boot.md, onboard.md, agents, workflows, Makefile) | `InunuNet/DarkFact` via `darkfact-upstream` | This workflow (`/report-bug`) |
+> | Your project bug (your code, your backlog, your goals) | Your own `origin` repo | `gh issue create` or GitHub web |
+>
+> If unsure: if it affects ALL DarkFact projects → template bug. If just your project → project bug.
 
 ## Steps
 
