@@ -48,7 +48,8 @@ Use the user's own words. Format:
 ```json
 {
   "project_name": "[dir name]",
-  "project_type": "[macos|webapp|python|api|mobile|research|general]",
+  "project_type": "[macos|webapp|python|api|mobile|research|devops|financial|legal|security|fleet|general]",
+  "soul_type": "[engineer|devops|financial|legal|security|av-consultant|fleet-manager|researcher]",
   "tech_stack": ["SwiftUI", "..."],
   "onboarding_complete": true,
   "features": {

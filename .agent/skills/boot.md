@@ -12,7 +12,7 @@ Run the full DarkFact boot sequence. Use this at session start or any time you n
 
 ```bash
 cat WORKSPACE 2>/dev/null || echo "MISSING"
-pwd && cat .agent/profile.json | python3 -c "import sys,json; p=json.load(sys.stdin); print('Project:', p.get('project_name','UNKNOWN'), '| Onboarded:', p.get('onboarding_complete', False))"
+pwd && cat .agent/profile.json | python3 -c "import sys,json; p=json.load(sys.stdin); print('Project:', p.get('project_name','UNKNOWN'), '| Type:', p.get('project_type','?'), '| Soul:', p.get('soul_type','?'), '| Onboarded:', p.get('onboarding_complete', False))"
 ```
 
 If `WORKSPACE` is missing or names don't match the directory → **STOP**. Tell the user to open this project in its own IDE window.

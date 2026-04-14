@@ -135,6 +135,7 @@ with open('.agent/profile.json', 'r') as f:
     p = json.load(f)
 p['project_name'] = 'FILL_IN'
 p['project_type'] = 'FILL_IN'  # one of: macos, webapp, python, api, mobile, research, devops, financial, legal, security, fleet, general
+p['soul_type'] = 'FILL_IN'     # one of: engineer, devops, financial, legal, security, av-consultant, fleet-manager, researcher
 p['tech_stack'] = ['FILL_IN']
 p['onboarding_complete'] = False
 p['features']['security_rules'] = False  # replace with True if enabled in Step 4
