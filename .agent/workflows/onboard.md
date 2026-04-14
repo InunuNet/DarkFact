@@ -6,6 +6,20 @@ description: AI-guided project onboarding — defines goal, picks tech stack, sc
 
 > Run this after `init.sh` to define your project. The agent guides you through scoping, tech stack selection, and generates all project files.
 
+## Crash Recovery
+
+Before starting, check for an incomplete session:
+
+```bash
+STATE=".agent/memory/scratch/checkpoint_onboard_state.json"
+if [ -f "$STATE" ]; then
+  python3 -c "import json; s=json.load(open('$STATE')); print(f'⚠️  Incomplete onboard found — last step: {s[\"last_step\"]}. Resume or restart?')"
+fi
+```
+
+If resuming → skip to `last_step + 1`.
+If restarting → `rm -f .agent/memory/scratch/checkpoint_onboard_*.json` then begin from Step 1.
+
 ## Steps
 
 ### 1. Introduce Vex
@@ -148,6 +162,17 @@ Write 2-4 project-specific rules derived from the tech stack.
 Example for SwiftUI: "Use @Observable over ObservableObject. Prefer native
 frameworks (SwiftUI, Network.framework) over third-party."
 
+After writing all files, record the checkpoint:
+
+```bash
+python3 -c "
+import json, datetime
+s = {'workflow':'onboard','last_step':5,'steps_complete':[1,2,3,4,5],'status':'in_progress','started':datetime.datetime.utcnow().isoformat()}
+open('.agent/memory/scratch/checkpoint_onboard_state.json','w').write(json.dumps(s,indent=2))
+print('✅ Checkpoint saved — step 5 complete')
+"
+```
+
 ### 6. Activate relevant rules
 
 Rules are file-based — activation means symlinking or copying the relevant rule files into `.claude/rules/` so Claude Code loads them automatically.
@@ -198,7 +223,7 @@ Return a task breakdown with agent assignments.
 
 ### 9. Mark onboarding complete
 
-Run this as the LAST action. This confirms onboarding succeeded and prevents re-onboarding on next boot.
+Run this as the LAST action. This confirms onboarding succeeded, prevents re-onboarding on next boot, and clears checkpoints.
 
 ```bash
 python3 -c "
@@ -210,4 +235,8 @@ with open('.agent/profile.json', 'w') as f:
     json.dump(p, f, indent=2)
 print('✅ Onboarding complete. profile.json updated.')
 "
+
+# Clear checkpoints — onboarding succeeded
+rm -f .agent/memory/scratch/checkpoint_onboard_*.json
+echo "🧹 Checkpoints cleared"
 ```
