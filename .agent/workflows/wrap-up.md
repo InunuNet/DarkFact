@@ -15,8 +15,9 @@ python3 execution/brain.py wrap-up --summary "SESSION_SUMMARY" --tags "relevant,
 
 3. **Update project memory** (if significant changes):
 - Add lessons to `.agent/memory/project/learned.md`
-- Update goals in `.agent/memory/project/goals.md`
-- Add TODOs to `.agent/memory/project/backlog.md`
+- Update goals in `.agent/memory/project/goals.md` — mark done with `~~goal~~ ✅`
+- **Tick off completed items** in `.agent/memory/project/backlog.md` (`- [ ]` → `- [x]`)
+- Add new TODOs to backlog for anything discovered but not yet done
 
 4. **Verify storage**:
 ```bash
