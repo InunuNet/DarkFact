@@ -126,3 +126,16 @@ python3 execution/brain.py stats
 ### OpenCode
 - Reads this file as AGENTS.md natively
 - Headless: `opencode run "prompt"`
+
+## 8. Memory Paths (Use DarkFact System — No Global Writes)
+
+All session memory, reflections, and learnings go into the **DarkFact memory tiers** — never to `~/.claude/MEMORY/`.
+
+| What | Where |
+|------|-------|
+| Session learnings, gotchas, decisions | `.agent/memory/project/learned.md` |
+| Semantic session summaries | `python3 execution/brain.py wrap-up ...` |
+| Working notes | `.agent/memory/scratch/` (cleared at wrap-up) |
+| Goals, backlog, architecture | `.agent/memory/project/*.md` |
+
+**Rule:** Any PAI Algorithm directive to write `MEMORY/LEARNING/` or `MEMORY/WORK/` must be redirected to `.agent/memory/project/learned.md` or `brain.py` instead. `~/.claude/MEMORY/` is not a DarkFact concept — global paths are for Claude Code tooling only, never project data.

@@ -17,6 +17,8 @@
 - [x] **FEATURE: `soul_type` field in profile.json** — added stub to template default, wired into onboard Step 5, surfaced in boot identity check.
 - [x] **FEATURE: `session_log.md` pattern** — rolling 20-entry log in memory/project/, wired into Stop hook and boot recall. First entry written.
 - [x] **FEATURE: `status: archive` in profile.json** — stub added to template default, boot skill warns if status=archive before proceeding.
+- [x] **BUG #4: `brain.py` wrap-up crashes on scratch subdirectory** — fixed: shutil.rmtree() for dirs, shutil import added. Closed #4. — `f.unlink()` fails on dirs. Fix: `shutil.rmtree(f)` if `f.is_dir()`. One line in `execution/brain.py` ~line 210.
+- [ ] **ISSUE #5: MEMORY/LEARNING paths must be project-local** — Algorithm reflections writing to `~/.claude/MEMORY/LEARNING/` instead of `{PROJECT_ROOT}/MEMORY/LEARNING/`. Fix in CLAUDE.md Section 8 + boot directive. MumblAI already has partial implementation — pull pattern from there. More reports incoming from fleet projects.
 - [ ] **FEATURE: `markitdown` recommended addon** — document PDF→Markdown conversion for research/legal soul types.
 
 - [x] **FEATURE: Add `designer` agent to the 8-agent team** — designer.md created, CLAUDE.md + profile.json updated, onboard auto-activates for UI soul types, symlinked to Claude + Gemini.

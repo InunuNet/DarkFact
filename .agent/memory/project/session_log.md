@@ -4,6 +4,26 @@ Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest
 
 ---
 
+## 2026-04-15 — Backlog review, no changes
+
+- Reviewed and presented full backlog to user
+- No commits, no file changes this block
+Commits: d513210 docs: CLAUDE.md + memory updates | 924de0c feat: /wrap-up skill | 7fb1582 feat: designer agent
+
+## 2026-04-15 — Bug triage, awaiting fix approval
+
+- #4 and #5 added to backlog, prioritised above smoke test
+- MumblAI partial impl of #5 noted as reference pattern
+- No commits this block
+Commits: d513210 docs: CLAUDE.md + memory updates | 924de0c feat: /wrap-up skill | 7fb1582 feat: designer agent
+
+## 2026-04-15 — GitHub issues reviewed, two bugs found
+
+- Issue #4: brain.py crash when scratch/ has subdirectory — fix ready to apply
+- Issue #5: MEMORY/LEARNING paths should be project-local not ~/.claude — bigger scope
+- No commits this block
+Commits: d513210 docs: CLAUDE.md + memory updates | 924de0c feat: /wrap-up skill | 7fb1582 feat: designer agent
+
 ## 2026-04-15 — /wrap-up skill created (v1.2.13)
 
 - .agent/skills/wrap-up.md created — /wrap-up now works as slash command
