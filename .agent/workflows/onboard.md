@@ -89,6 +89,7 @@ Based on the stack and goal, decide which rules to activate — then **present t
 **Decision logic:**
 - **Security rules** → enable if: web app, API, user data, network access, or any auth
 - **Style guide** → enable if: any UI (web, macOS, mobile, desktop)
+- **Designer agent** → activate for: webapp, mobile, macos soul types. Inform the user: "I've added a UI/UX designer agent to your team — they'll handle visual design specs and accessibility."
 
 **For each rule you plan to enable, tell the user what it does:**
 

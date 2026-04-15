@@ -30,6 +30,7 @@
   "agents": [
     "lead",
     "dev",
+    "designer",
     "analyst",
     "architect",
     "qa",
