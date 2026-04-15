@@ -22,6 +22,7 @@
 - [ ] **FEATURE: `markitdown` recommended addon** — document PDF→Markdown conversion for research/legal soul types.
 
 - [x] **FEATURE: Add `designer` agent to the 8-agent team** — designer.md created, CLAUDE.md + profile.json updated, onboard auto-activates for UI soul types, symlinked to Claude + Gemini.
+- [ ] **BUG #6/#7: `.claude/agents/` not populated — agent team not wired** — `sync_agents.sh` targets `.claude/agents/` but dir doesn't exist in downstream projects. Global Claude Code built-ins fill the vacuum instead of DarkFact agents. `model_tier` is paper-only until fixed. Fix: ensure `init.sh` creates `.claude/agents/` + `.gemini/agents/` and `sync_agents.sh` populates them correctly. **Blocks smoke test Phase 1–4.**
 - [ ] **TEST: Smoke test all 3 CLIs** — test plan written in workflows/smoke_test.md (T1-T5). Run manually against fresh project. Results table at bottom of smoke_test.md.
 - [x] **FEATURE: `darkfact()` shell function — CLI picker** — updated ~/.zshrc: now presents Claude Code | Gemini CLI | Codex | Terminal with binary presence check for each.
 

@@ -51,6 +51,11 @@ scaffold_core() {
         .agent/rules \
         .agent/skills \
         .agent/workflows \
+        .claude/agents \
+        .claude/rules \
+        .claude/skills \
+        .gemini/agents \
+        .gemini/skills \
         execution \
         .tmp
 

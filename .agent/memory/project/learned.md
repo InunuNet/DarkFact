@@ -77,6 +77,12 @@ Claude Code only supports two hook types: `"command"` (runs a shell command) and
 
 **Rule**: Always validate hook types against https://code.claude.com/docs/en/hooks before shipping.
 
+## L20: Agent team dispatch is broken until .claude/agents/ is populated (2026-04-15)
+
+DarkFact agents (`.agent/agents/*.md`) are symlinked into `.claude/agents/` and `.gemini/agents/` — but only in the DarkFact template itself. Downstream projects created via `darkfact()` + `init.sh` don't get those dirs created or populated. `sync_agents.sh` targets `.claude/agents/` but fails silently if the dir is missing. Result: `@lead`, `@dev`, `@designer` dispatch to global Claude Code built-ins, not DarkFact agents. `model_tier: flash/pro` is ignored.
+
+**Rule**: `init.sh` must create `.claude/agents/` and `.gemini/agents/` and run `sync_agents.sh` as part of scaffolding. Don't assume the dirs exist.
+
 ## L18: DarkFact hooks are already project-scoped — global settings are clean (2026-04-14)
 
 The Stop/SessionStart hooks in `.claude/settings.json` inside the DarkFact project dir are project-level. Claude Code merges global + project settings at runtime. Global `~/.claude/settings.json` contains only PAI hooks — no DarkFact bleed. No config change needed; the setup was already correct.
