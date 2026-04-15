@@ -25,6 +25,7 @@ Database: .agent/memory/brain/ (project-local, persistent)
 import argparse
 import json
 import os
+import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -207,7 +208,10 @@ def wrap_up(summary: str, tags: str = ""):
         cleared = 0
         for f in scratch_dir.iterdir():
             if f.name != ".keep":
-                f.unlink()
+                if f.is_dir():
+                    shutil.rmtree(f)
+                else:
+                    f.unlink()
                 cleared += 1
         if cleared:
             print(f"🧹 Cleared {cleared} scratch files.")
