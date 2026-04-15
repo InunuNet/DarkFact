@@ -19,6 +19,7 @@
 - [x] **FEATURE: `status: archive` in profile.json** — stub added to template default, boot skill warns if status=archive before proceeding.
 - [ ] **FEATURE: `markitdown` recommended addon** — document PDF→Markdown conversion for research/legal soul types.
 
+- [x] **FEATURE: Add `designer` agent to the 8-agent team** — designer.md created, CLAUDE.md + profile.json updated, onboard auto-activates for UI soul types, symlinked to Claude + Gemini.
 - [ ] **TEST: Smoke test all 3 CLIs** — test plan written in workflows/smoke_test.md (T1-T5). Run manually against fresh project. Results table at bottom of smoke_test.md.
 - [x] **FEATURE: `darkfact()` shell function — CLI picker** — updated ~/.zshrc: now presents Claude Code | Gemini CLI | Codex | Terminal with binary presence check for each.
 

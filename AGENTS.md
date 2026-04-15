@@ -82,12 +82,13 @@ python3 execution/brain.py stats
 
 ## 5. Agents
 
-7 canonical agents in `.agent/agents/`. Generate platform configs with `make sync-agents`.
+8 canonical agents in `.agent/agents/`. Generate platform configs with `make sync-agents`.
 
 | Agent | Role |
 |-------|------|
 | **lead** | Plans, delegates, reviews. Never writes code. |
 | **dev** | Code implementation. Follows architect's design. |
+| **designer** | UI/UX design, component specs, accessibility. Never implements. |
 | **analyst** | Research + analysis. Read-only. |
 | **architect** | Structural decisions. Returns decisions, not code. |
 | **qa** | Testing + review. Reports pass/fail. |
@@ -100,7 +101,7 @@ python3 execution/brain.py stats
 |----------|----------|
 | `/boot` | Start of every session |
 | `/onboard` | New project setup (first time only) |
-| `/wrap-up` | End of session |
+| `/wrap-up` | End of session — updates memory, session log, brain |
 | `/audit` | Health check |
 | `/test` | Run validation |
 | `/report-bug` | Found a bug in the DarkFact template? Report it. |
