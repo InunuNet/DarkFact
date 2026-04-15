@@ -22,7 +22,7 @@ map_gemini_model() {
   case "$1" in
     pro) echo "gemini-2.5-pro" ;;
     flash) echo "gemini-2.5-flash" ;;
-    local) echo "gemma-4" ;;
+    local) echo "gemma-3" ;;
     *) echo "gemini-2.5-flash" ;;
   esac
 }
