@@ -1,12 +1,20 @@
 {
   "permissions": {
     "allow": ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "WebFetch", "WebSearch", "Task", "Skill"],
-    "ask": [
+    "deny": [
       "Bash(rm -rf *)",
-      "Bash(git push --force:*)",
-      "Bash(dd if=/dev/zero:*)",
+      "Bash(git push --force *)",
+      "Bash(dd if=/dev/zero*)",
+      "Bash(curl * | sh)",
+      "Bash(curl * | bash)",
+      "Bash(wget * | sh)",
+      "Bash(wget * | bash)",
       "Read(~/.ssh/*)",
       "Read(~/.aws/*)",
+      "Read(~/.gnupg/*)"
+    ],
+    "ask": [
+      "Bash(chmod 777 *)",
       "Write(~/.claude/settings.json)"
     ]
   },
@@ -24,6 +32,19 @@
       "hooks": [{
         "type": "command",
         "command": "CHANGED=$(git diff --stat HEAD 2>/dev/null | wc -l | tr -d ' '); if [ \"$CHANGED\" -gt 0 ]; then echo 'Session had uncommitted changes — run /wrap-up at start of next session.'; fi"
+      }]
+    }],
+    "PreCompact": [{
+      "hooks": [{
+        "type": "command",
+        "command": "input=$(cat); trigger=$(echo \"$input\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('compaction_trigger','unknown'))\" 2>/dev/null || echo 'unknown'); recent=$(git log --oneline -5 2>/dev/null | tr '\\n' '; ' || echo 'no git'); python3 execution/brain.py remember --summary \"Pre-compaction checkpoint ($trigger). Recent commits: $recent\" --tags \"compaction,checkpoint\" 2>/dev/null || true",
+        "timeout": 30
+      }]
+    }],
+    "PostCompact": [{
+      "hooks": [{
+        "type": "prompt",
+        "prompt": "Context was just compacted. Re-read .agent/memory/project/goals.md and .agent/memory/project/learned.md now to restore critical context before continuing."
       }]
     }],
     "PreToolUse": [
