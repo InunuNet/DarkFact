@@ -47,6 +47,22 @@
         "prompt": "Context was just compacted. Re-read .agent/memory/project/goals.md and .agent/memory/project/learned.md now to restore critical context before continuing."
       }]
     }],
+    "SubagentStart": [{
+      "matcher": "analyst|architect|designer|dev|docs|lead|maintainer|qa",
+      "hooks": [{
+        "type": "command",
+        "command": "bash execution/hooks/subagent_start.sh",
+        "timeout": 10
+      }]
+    }],
+    "SubagentStop": [{
+      "matcher": "analyst|architect|designer|dev|docs|lead|maintainer|qa",
+      "hooks": [{
+        "type": "command",
+        "command": "bash execution/hooks/subagent_stop.sh",
+        "timeout": 15
+      }]
+    }],
     "PreToolUse": [
       {
         "matcher": "Write",

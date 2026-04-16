@@ -411,6 +411,25 @@ def scan_blockers():
     return True
 
 
+def resolve_blocker(blocker: str, resolution: str, fix_type: str = "learned"):
+    """Mark a recurring blocker as resolved by storing a resolution memory."""
+    mem_id = remember(
+        summary=f"Resolved blocker '{blocker}': {resolution}",
+        tags=f"pain-point,resolved,{blocker}",
+        source="pain-point-resolution",
+    )
+    # Update metadata with extra fields by retrieving and upserting
+    collection = get_collection()
+    existing = collection.get(ids=[mem_id])
+    if existing["ids"]:
+        meta = existing["metadatas"][0]
+        meta["blocker"] = blocker
+        meta["fix_type"] = fix_type
+        collection.update(ids=[mem_id], metadatas=[meta])
+    print(f"✅ Blocker '{blocker}' marked resolved: {mem_id}")
+    return mem_id
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Antigravity Brain — Semantic memory for AI agents.",
@@ -464,6 +483,12 @@ def main():
     # scan-blockers
     sub.add_parser("scan-blockers", help="Detect recurring blockers across sessions")
 
+    # resolve-blocker
+    p_res = sub.add_parser("resolve-blocker", help="Mark a recurring blocker as resolved")
+    p_res.add_argument("--blocker", "-b", required=True, help="Blocker tag to resolve")
+    p_res.add_argument("--resolution", "-r", required=True, help="What was done to fix it")
+    p_res.add_argument("--fix-type", "-f", default="learned", help="Fix type: learned or backlog")
+
     args = parser.parse_args()
 
     if args.action == "remember":
@@ -492,6 +517,8 @@ def main():
     elif args.action == "scan-blockers":
         found = scan_blockers()
         sys.exit(1 if found else 0)
+    elif args.action == "resolve-blocker":
+        resolve_blocker(args.blocker, args.resolution, args.fix_type)
 
 
 if __name__ == "__main__":

@@ -82,6 +82,8 @@ If recurring blockers are detected:
 - **🟡 RESEARCH (2 occurrences):** Before starting work, delegate to the analyst agent to do deep research on the blocker. The analyst should use web search to determine if this is a known issue, find workarounds or alternatives, and present findings before the team continues down the same path.
 - **🔴 PIVOT (3+ occurrences):** Escalate to the architect agent. The architect should evaluate whether to continue the current approach or pivot to an alternative. Present the options with tradeoffs to the user. Do NOT continue the current approach without explicit user approval.
 
+When blockers are found at either threshold, run `/pain-point-monitor` to research the root cause and record a fix (learned lesson or backlog item) rather than just noting the warning.
+
 If no recurring blockers → proceed normally.
 
 ### 7. Git remotes check

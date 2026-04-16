@@ -23,7 +23,18 @@ fi
 
 # Layer 3: profile.json project_name must match (if file exists)
 if [ -f "$PROFILE_FILE" ]; then
-  PROFILE_NAME=$(grep -o '"project_name"[[:space:]]*:[[:space:]]*"[^"]*"' "$PROFILE_FILE" 2>/dev/null | grep -o '"[^"]*"$' | tr -d '"')
+  PROFILE_NAME=$(python3 -c "
+import json, sys
+try:
+    p = json.load(open('$PROFILE_FILE'))
+    print(p.get('project_name', ''))
+except Exception:
+    sys.exit(1)
+" 2>/dev/null)
+  if [ $? -ne 0 ]; then
+    echo "⛔ profile.json is unreadable or malformed — fix it before continuing" >&2
+    exit 2
+  fi
   if [ -n "$PROFILE_NAME" ] && [ "$PROFILE_NAME" != "$WORKSPACE_NAME" ]; then
     echo "⛔ Profile mismatch: profile.json says '$PROFILE_NAME' but WORKSPACE says '$WORKSPACE_NAME'" >&2
     exit 2
