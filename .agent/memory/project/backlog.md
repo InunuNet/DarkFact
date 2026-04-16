@@ -22,7 +22,12 @@
 - [ ] **FEATURE: `markitdown` recommended addon** — document PDF→Markdown conversion for research/legal soul types.
 
 - [x] **FEATURE: Add `designer` agent to the 8-agent team** — designer.md created, CLAUDE.md + profile.json updated, onboard auto-activates for UI soul types, symlinked to Claude + Gemini.
-- [ ] **BUG #6/#7: `.claude/agents/` not populated — agent team not wired** — `sync_agents.sh` targets `.claude/agents/` but dir doesn't exist in downstream projects. Global Claude Code built-ins fill the vacuum instead of DarkFact agents. `model_tier` is paper-only until fixed. Fix: ensure `init.sh` creates `.claude/agents/` + `.gemini/agents/` and `sync_agents.sh` populates them correctly. **Blocks smoke test Phase 1–4.**
+- [x] **BUG #6/#7: `.claude/agents/` not populated — agent team not wired** — fixed in v1.2.14: `init.sh` creates dirs, `sync_agents.sh` populates on first boot.
+- [x] **ISSUE #7: Complete Claude Code adapter** — fixed in v2.0.0: SessionEnd hook, PreToolUse guards, verify_workspace.sh, 4 new slash commands, init.sh sync_skills().
+- [x] **ISSUE #8: Stop hook fires every response** — fixed in v2.0.0: Stop→SessionEnd.
+- [x] **ISSUE #10: Enforce memory path redirection** — fixed in v2.0.0: PreToolUse Write/Edit guards block ~/.claude/MEMORY/ paths.
+- [x] **ISSUE #13: verify_workspace.sh strips internal spaces** — fixed: tr→sed for trailing-only whitespace strip.
+- [x] **FEATURE: Recurring issue detector** — v2.0.0: brain.py scan-blockers, --blockers flag, boot step 6 auto-scan, analyst escalation protocol.
 - [ ] **TEST: Smoke test all 3 CLIs** — test plan written in workflows/smoke_test.md (T1-T5). Run manually against fresh project. Results table at bottom of smoke_test.md.
 - [x] **FEATURE: `darkfact()` shell function — CLI picker** — updated ~/.zshrc: now presents Claude Code | Gemini CLI | Codex | Terminal with binary presence check for each.
 
@@ -35,7 +40,7 @@
 
 ## Post-v1.0.0 Polish (Low Priority)
 
-- [ ] Live test Claude Code hooks (SessionStart + Stop)
+- [x] Live test Claude Code hooks (SessionStart + SessionEnd)
 - [ ] Live test Gemini CLI hooks (SessionStart + SessionEnd)
 - [ ] Evaluate PAI packs (Research, Thinking, Security, ContextSearch)
 - [ ] Python-based YAML parser for sync_agents.sh (L6 fix)

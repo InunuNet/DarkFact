@@ -4,6 +4,16 @@ Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest
 
 ---
 
+## 2026-04-16 — DarkFact v2.0.0: Claude Code adapter + recurring issue detector
+
+- Fixed #7 (complete Claude adapter), #8 (Stop→SessionEnd), #10 (memory path guards), #13 (spaces in project names)
+- Built recurring issue detector: brain.py scan-blockers with escalation ladder (2x→research, 3x→pivot)
+- Replaced .claude/skills/ symlink with real dir — Claude Code doesn't follow dir symlinks (L22)
+- /simplify caught critical bugs twice: || true swallowing exit 2, unconditional empty blocker storage
+- Closed PR #9 (superseded), opened PR #12 with 6 commits
+- Added 4 lessons (L22–L25), updated backlog with 6 closed items
+Commits: c586993 fix: skills dir symlinks | da2b330 fix: spaces in project names | b731a32 feat: recurring issue detector
+
 ## 2026-04-15 — Backlog review, no changes
 
 - Reviewed and presented full backlog to user

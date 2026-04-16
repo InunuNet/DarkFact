@@ -77,6 +77,32 @@ Claude Code only supports two hook types: `"command"` (runs a shell command) and
 
 **Rule**: Always validate hook types against https://code.claude.com/docs/en/hooks before shipping.
 
+## L22: Claude Code doesn't follow directory symlinks for skills (2026-04-16)
+
+`.claude/skills/` was a symlink to `.agent/skills/`. Claude Code doesn't traverse directory symlinks when scanning for slash commands — `/wrap-up`, `/boot`, etc. all returned "Unknown command." Git also can't operate on files "beyond a symbolic link."
+
+**Fix**: Replace symlinks with real directories. `init.sh` copies `.agent/skills/*.md` into `.claude/skills/` and `.gemini/skills/` via `sync_skills()`. Same pattern as `sync_agents.sh` for agents.
+
+**Rule**: Never use directory symlinks for `.claude/skills/` or `.gemini/skills/`. Use real dirs with copied files. This is the skills equivalent of L21 (agents).
+
+## L23: `|| true` swallows exit codes in PreToolUse hooks (2026-04-16)
+
+PR #9 appended `|| true` to all PreToolUse hook commands as a "safety" fallback. This converts exit code 2 (block tool call) into exit code 0 (allow) — making the guards completely non-functional. The guards look correct but silently do nothing.
+
+**Rule**: Never use `|| true` on PreToolUse hooks that use exit 2 to block. If you need a fallback for missing dependencies, handle it in the script itself, not with a shell-level catch-all.
+
+## L24: Use bash `case` over python3 for PreToolUse path checks (2026-04-16)
+
+Python3 startup is ~50-80ms per invocation. PreToolUse hooks fire on every tool call. For simple string-contains checks on paths, bash `case "$VAR" in *pattern*) exit 2 ;; esac` is instant and has no dependency on python3.
+
+**Rule**: Default to bash for PreToolUse hooks. Only use python3 when parsing JSON or doing logic bash can't handle.
+
+## L25: Store metadata conditionally in Chroma (2026-04-16)
+
+Storing empty strings (`"blockers": ""`) in Chroma metadata on every memory bloats the database and prevents efficient `where` filtering. Chroma's `$ne` filter can only exclude non-empty values if the field doesn't exist on empty records.
+
+**Rule**: Only add optional metadata fields when they have a value: `if blockers: metadata["blockers"] = blockers`.
+
 ## L20: Agent team dispatch is broken until .claude/agents/ is populated (2026-04-15)
 
 DarkFact agents (`.agent/agents/*.md`) are symlinked into `.claude/agents/` and `.gemini/agents/` — but only in the DarkFact template itself. Downstream projects created via `darkfact()` + `init.sh` don't get those dirs created or populated. `sync_agents.sh` targets `.claude/agents/` but fails silently if the dir is missing. Result: `@lead`, `@dev`, `@designer` dispatch to global Claude Code built-ins, not DarkFact agents. `model_tier: flash/pro` is ignored.
