@@ -48,13 +48,21 @@ Format exactly:
 Commits: [git log --oneline -3]
 ```
 
-### 5. Store brain summary
+### 5. Tag blockers (if any)
+
+If the session hit any recurring issues, blockers, or unsolved problems — note them as blocker tags for the `--blockers` flag in the next step. Use short, kebab-case identifiers (e.g., `tauri-popup`, `webview-rendering`, `api-rate-limit`).
+
+If no blockers this session, skip this step.
+
+### 6. Store brain summary
 
 ```bash
-python3 execution/brain.py wrap-up --summary "$(git log --oneline -3 2>/dev/null || echo 'no commits')" --tags "session,wrap-up"
+python3 execution/brain.py wrap-up --summary "$(git log --oneline -3 2>/dev/null || echo 'no commits')" --tags "session,wrap-up" --blockers "blocker1,blocker2"
 ```
 
-### 6. Confirm
+Omit `--blockers` if no blockers this session.
+
+### 7. Confirm
 
 Report:
 ```

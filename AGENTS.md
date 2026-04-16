@@ -47,6 +47,9 @@ python3 execution/brain.py last-session
 python3 execution/brain.py export > brain_backup.json
 python3 execution/brain.py import brain_backup.json
 python3 execution/brain.py stats
+python3 execution/brain.py scan-blockers               # Detect recurring issues
+python3 execution/brain.py remember -s "summary" --blockers "tag1,tag2"
+python3 execution/brain.py wrap-up -s "summary" --blockers "tag1"
 ```
 
 ### Memory Tiers
