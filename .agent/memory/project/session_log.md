@@ -4,6 +4,18 @@ Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest
 
 ---
 
+## 2026-04-16 — Fleet-wide v2.0.0 rollout + overlay hardening
+
+- Merged PR #12 → v2.0.0 on main, closed #8 and #10 manually
+- Fixed #14: overlay_template.sh cp -r → rsync --delete, dynamic TEMPLATE/version, added Makefile+CHANGELOG
+- Fixed Stop hook in PortPulse + Mlilo (same bug as Mumbl AI — settings.json not in overlay)
+- Added .claude/settings.json to overlay so hook drift can't recur across fleet
+- Created overlay_all.sh — batch updater with ignore list, sorts closest-to-current first
+- Ran fleet-wide overlay: 17/17 projects updated to v2.0.0, 0 failures
+- Fleet status: all green, Codi RnI intentionally not onboarded (research project, user will onboard on next use)
+- Workspace Template added to overlay ignore list (legacy original, different versioning)
+Commits: 29cadf2 feat: overlay_all.sh | cb33f4e fix: overlay copies settings.json | c00ce32 fix: rsync --delete
+
 ## 2026-04-16 — DarkFact v2.0.0: Claude Code adapter + recurring issue detector
 
 - Fixed #7 (complete Claude adapter), #8 (Stop→SessionEnd), #10 (memory path guards), #13 (spaces in project names)

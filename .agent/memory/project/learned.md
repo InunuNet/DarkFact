@@ -1,5 +1,17 @@
 # Learned
 
+## L26: overlay_template.sh must copy .claude/settings.json (2026-04-16)
+
+`cp -r` only merges into the destination — it never deletes files removed upstream. Three fleet projects (Mumbl AI, PortPulse, Mlilo) had the Stop hook bug long after it was fixed in the template because `settings.json` wasn't in the overlay list. Orphan files from restructured dirs (skills, agents, rules) accumulate silently across versions.
+
+**Rule**: Always use `rsync -a --delete` for directory overlays. Always include `.claude/settings.json` in the overlay. If a file exists in the template, it must be in the overlay — no exceptions.
+
+## L27: macOS bash is v3.2 — no mapfile, no sort -V (2026-04-16)
+
+macOS ships bash 3.2. `mapfile` (bash 4+) and `sort -V` (GNU coreutils) are both unavailable. Scripts using these silently produce no output rather than erroring loudly. Use `while IFS= read -r` loops instead of `mapfile`, and `sort -r` for reverse sort when version-natural sort isn't critical.
+
+**Rule**: Write all DarkFact shell scripts targeting bash 3.2 / macOS BSD coreutils. Test with `bash -n` but also do a dry-run to catch silent failures from missing builtins.
+
 ## L1: Don't reinvent the wheel (2026-04-14)
 
 The v1-v5 workspace template wrote custom scripts for everything: boot, dispatch, comms, memory, wrap-up, agent sync. This was wrong. Claude Code, Gemini CLI, and OpenCode already have built-in:

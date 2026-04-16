@@ -27,6 +27,8 @@
 - [x] **ISSUE #8: Stop hook fires every response** — fixed in v2.0.0: Stop→SessionEnd.
 - [x] **ISSUE #10: Enforce memory path redirection** — fixed in v2.0.0: PreToolUse Write/Edit guards block ~/.claude/MEMORY/ paths.
 - [x] **ISSUE #13: verify_workspace.sh strips internal spaces** — fixed: tr→sed for trailing-only whitespace strip.
+- [x] **BUG #14: overlay_template.sh leaves orphan files** — fixed: cp -r → rsync --delete, .claude/settings.json added to overlay, Makefile+CHANGELOG included. Closes #14.
+- [x] **FEATURE: overlay_all.sh batch updater** — created: discovers all fleet projects, ignore list (DarkFact/Workspace Template/PAI), sorts closest-to-current first, runs overlay + sync_agents per project.
 - [x] **FEATURE: Recurring issue detector** — v2.0.0: brain.py scan-blockers, --blockers flag, boot step 6 auto-scan, analyst escalation protocol.
 - [ ] **TEST: Smoke test all 3 CLIs** — test plan written in workflows/smoke_test.md (T1-T5). Run manually against fresh project. Results table at bottom of smoke_test.md.
 - [x] **FEATURE: `darkfact()` shell function — CLI picker** — updated ~/.zshrc: now presents Claude Code | Gemini CLI | Codex | Terminal with binary presence check for each.
