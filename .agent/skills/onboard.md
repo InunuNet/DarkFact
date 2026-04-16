@@ -16,6 +16,13 @@ all workspace context files.
 
 ## Flow
 
+0. **Project name first — stop and get this right**
+   Before anything else, ask for the project name and hold on it.
+   Warn the user clearly: **renaming a project after the codebase grows is painful** —
+   it ripples through file paths, imports, git history, profile.json, WORKSPACE, and
+   every agent's memory. One minute now saves hours later.
+   Only proceed once they've confirmed the name they actually want to ship with.
+
 1. **Introduce yourself** and ask for their name + goal
 2. **Clarify** the goal with 1-3 follow-up questions
 3. **Recommend** a tech stack with brief reasoning
