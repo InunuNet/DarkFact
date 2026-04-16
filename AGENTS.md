@@ -47,6 +47,9 @@ python3 execution/brain.py last-session
 python3 execution/brain.py export > brain_backup.json
 python3 execution/brain.py import brain_backup.json
 python3 execution/brain.py stats
+python3 execution/brain.py scan-blockers               # Detect recurring issues
+python3 execution/brain.py remember -s "summary" --blockers "tag1,tag2"
+python3 execution/brain.py wrap-up -s "summary" --blockers "tag1"
 ```
 
 ### Memory Tiers
@@ -60,12 +63,13 @@ python3 execution/brain.py stats
 
 ## 3. Rules
 
-1. **Native First** — use platform features (hooks, agents, skills, MCP) before custom code
-2. **Least Tokens** — be terse. BLUF. Bullets over prose.
-3. **No Placeholders** — write real implementations, not TODOs
-4. **Read Before Write** — check goals.md and learned.md before starting work
-5. **Self-Anneal** — error → fix → update learned.md. Pivot after 3 failed attempts
-6. **Wrap Up** — at session end, store a summary in brain
+1. **Parallel by Default** — decompose into independent workstreams, spin up agents simultaneously. Sequential is the exception.
+2. **Native First** — use platform features (hooks, agents, skills, MCP) before custom code
+3. **Least Tokens** — be terse. BLUF. Bullets over prose.
+4. **No Placeholders** — write real implementations, not TODOs
+5. **Read Before Write** — check goals.md and learned.md before starting work
+6. **Self-Anneal** — error → fix → update learned.md. Pivot after 3 failed attempts
+7. **Wrap Up** — at session end, store a summary in brain
 
 > **Project-specific rules** in `.agent/memory/project/rules.md` take precedence
 > over these when they conflict (e.g. a Swift project overrides CLI-first defaults).
@@ -109,9 +113,9 @@ python3 execution/brain.py stats
 ## 7. Provider Notes
 
 ### Claude Code
-- Hooks in `.claude/settings.json` — SessionStart (brain recall), Stop (maintainer)
+- Hooks in `.claude/settings.json` — SessionStart (brain recall + boot), SessionEnd (wrap-up reminder), PreToolUse (workspace verify, memory guard)
 - Agent Teams: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`
-- Skills at `.claude/skills/` (symlinked to `.agent/skills/`)
+- Skills at `.claude/skills/` (copied from `.agent/skills/` — not symlinked, Claude Code doesn't follow dir symlinks)
 - Continue: `claude -c` | Headless: `claude -p "prompt"`
 
 ### Gemini CLI

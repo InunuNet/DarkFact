@@ -17,6 +17,9 @@ Usage:
     python3 execution/brain.py export > backup.json       # Export all memories
     python3 execution/brain.py import backup.json         # Import memories
     python3 execution/brain.py compact                    # Merge old memories
+    python3 execution/brain.py remember --summary "Hit Tauri popup rendering bug again" --blockers "tauri-popup"
+    python3 execution/brain.py wrap-up --summary "Session summary" --blockers "tauri-popup,webview-rendering"
+    python3 execution/brain.py scan-blockers            # Detect recurring issues
 
 Requires: pip install chromadb (installed in ~/.antigravity-env)
 Database: .agent/memory/brain/ (project-local, persistent)
@@ -72,7 +75,7 @@ def get_collection():
     )
 
 
-def remember(summary: str, tags: str = "", source: str = "manual"):
+def remember(summary: str, tags: str = "", source: str = "manual", blockers: str = ""):
     """Store a memory with automatic embedding."""
     collection = get_collection()
     mem_id = f"mem_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
@@ -82,6 +85,8 @@ def remember(summary: str, tags: str = "", source: str = "manual"):
         "source": source,
         "word_count": len(summary.split()),
     }
+    if blockers:
+        metadata["blockers"] = blockers
     collection.add(
         ids=[mem_id],
         documents=[summary],
@@ -197,10 +202,10 @@ def stats():
     print(f"   Path: {brain_path.resolve()}")
 
 
-def wrap_up(summary: str, tags: str = ""):
+def wrap_up(summary: str, tags: str = "", blockers: str = ""):
     """End-of-session wrap-up: store summary + clear scratch."""
     # Store the session summary
-    mem_id = remember(summary, tags=tags or "session,wrap-up", source="wrap-up")
+    mem_id = remember(summary, tags=tags or "session,wrap-up", source="wrap-up", blockers=blockers)
 
     # Clear scratch files
     scratch_dir = Path(".agent/memory/scratch")
@@ -340,6 +345,72 @@ def compact():
     print(f"\nTo remove old memories: python3 execution/brain.py forget <id>")
 
 
+def _parse_blockers(raw: str) -> list:
+    """Normalize a comma-separated blocker string into a list of lowercase tags."""
+    return [b.strip().lower() for b in raw.split(",") if b.strip()]
+
+
+def scan_blockers():
+    """Scan brain for recurring blockers across sessions. Exit 1 if found."""
+    collection = get_collection()
+    if collection.count() == 0:
+        print("No memories to scan.")
+        return False
+
+    # Only load memories that have blockers, skip document text
+    try:
+        all_data = collection.get(
+            where={"blockers": {"$ne": ""}},
+            include=["metadatas"],
+        )
+    except Exception:
+        # Fallback for older Chroma versions or empty filter results
+        all_data = collection.get(include=["metadatas"])
+
+    if not all_data["ids"]:
+        print("No recurring blockers detected.")
+        return False
+
+    blocker_sessions = {}  # blocker_tag -> list of (date, memory_id)
+
+    for i in range(len(all_data["ids"])):
+        meta = all_data["metadatas"][i]
+        blockers_str = meta.get("blockers", "")
+        if not blockers_str:
+            continue
+        ts = meta.get("timestamp", "")[:10]
+        mem_id = all_data["ids"][i]
+        for b in _parse_blockers(blockers_str):
+            if b not in blocker_sessions:
+                blocker_sessions[b] = []
+            blocker_sessions[b].append({"date": ts, "id": mem_id})
+
+    # Filter to recurring only (2+)
+    recurring = {k: v for k, v in blocker_sessions.items() if len(v) >= 2}
+
+    if not recurring:
+        print("No recurring blockers detected.")
+        return False
+
+    print("⚠️  RECURRING BLOCKERS DETECTED:\n")
+    for blocker, sessions in sorted(recurring.items(), key=lambda x: -len(x[1])):
+        count = len(sessions)
+        if count >= 3:
+            level = "🔴 PIVOT"
+            action = "Architect pivot recommendation needed"
+        else:
+            level = "🟡 RESEARCH"
+            action = "Deep research into alternatives needed"
+
+        dates = ", ".join(s["date"] for s in sessions)
+        print(f"  {level} [{count}x] {blocker}")
+        print(f"    Sessions: {dates}")
+        print(f"    Action: {action}")
+        print()
+
+    return True
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Antigravity Brain — Semantic memory for AI agents.",
@@ -352,6 +423,7 @@ def main():
     p_rem.add_argument("--summary", "-s", required=True, help="Memory content")
     p_rem.add_argument("--tags", "-t", default="", help="Comma-separated tags")
     p_rem.add_argument("--source", default="manual", help="Source identifier")
+    p_rem.add_argument("--blockers", "-b", default="", help="Comma-separated blocker tags")
 
     # recall
     p_rec = sub.add_parser("recall", help="Semantic search over memories")
@@ -373,6 +445,7 @@ def main():
     p_wrap = sub.add_parser("wrap-up", help="Session wrap-up: store summary + clear scratch")
     p_wrap.add_argument("--summary", "-s", required=True, help="Session summary")
     p_wrap.add_argument("--tags", "-t", default="", help="Comma-separated tags")
+    p_wrap.add_argument("--blockers", "-b", default="", help="Comma-separated blocker tags")
 
     # last-session
     p_last = sub.add_parser("last-session", help="Show the most recent wrap-up memory")
@@ -388,10 +461,13 @@ def main():
     # compact
     sub.add_parser("compact", help="Review and merge old memories")
 
+    # scan-blockers
+    sub.add_parser("scan-blockers", help="Detect recurring blockers across sessions")
+
     args = parser.parse_args()
 
     if args.action == "remember":
-        remember(args.summary, args.tags, args.source)
+        remember(args.summary, args.tags, args.source, args.blockers)
     elif args.action == "recall":
         if args.json:
             recall_raw(args.query, args.n)
@@ -404,7 +480,7 @@ def main():
     elif args.action == "stats":
         stats()
     elif args.action == "wrap-up":
-        wrap_up(args.summary, args.tags)
+        wrap_up(args.summary, args.tags, args.blockers)
     elif args.action == "last-session":
         last_session(args.quiet)
     elif args.action == "export":
@@ -413,6 +489,9 @@ def main():
         import_memories(args.file)
     elif args.action == "compact":
         compact()
+    elif args.action == "scan-blockers":
+        found = scan_blockers()
+        sys.exit(1 if found else 0)
 
 
 if __name__ == "__main__":

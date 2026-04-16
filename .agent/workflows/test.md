@@ -28,5 +28,5 @@ ls .claude/agents/ .gemini/agents/
 4. **Check symlinks**:
 ```bash
 test -L CLAUDE.md && test -L GEMINI.md && echo "✅ AGENTS.md symlinks"
-test -L .claude/skills && test -L .gemini/skills && echo "✅ Skill symlinks"
+test -d .claude/skills && test -d .gemini/skills && echo "✅ Skills dirs"
 ```

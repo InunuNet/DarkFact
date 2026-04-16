@@ -22,8 +22,8 @@ python3 -c "import json; json.load(open('.gemini/settings.json')); print('Gemini
 ```bash
 test -L CLAUDE.md && echo "CLAUDE.md → AGENTS.md OK" || echo "CLAUDE.md BROKEN"
 test -L GEMINI.md && echo "GEMINI.md → AGENTS.md OK" || echo "GEMINI.md BROKEN"
-test -L .claude/skills && echo ".claude/skills OK" || echo ".claude/skills BROKEN"
-test -L .gemini/skills && echo ".gemini/skills OK" || echo ".gemini/skills BROKEN"
+test -d .claude/skills && echo ".claude/skills OK" || echo ".claude/skills MISSING"
+test -d .gemini/skills && echo ".gemini/skills OK" || echo ".gemini/skills MISSING"
 ```
 
 4. **Check brain**:
