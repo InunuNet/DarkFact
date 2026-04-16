@@ -4,6 +4,18 @@ Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest
 
 ---
 
+## 2026-04-17 — DarkFact v2.1.x: harness hardening, purification, self-improvement loop
+
+- v2.1.0: full codebase purification — deleted dead files, stale docs, duplicate rules, orphan workflows
+- v2.1.0: fixed memory guards (stdin JSON), stale Stop-hook refs, Makefile version
+- v2.1.1: PreCompact/PostCompact hooks, permissions.deny block in settings.json
+- v2.1.2: SubagentStart/Stop hooks, verify_workspace.sh JSON safety, Pain Point Monitor skill
+- v2.1.2: onboard Step 0 — project name warning before anything else
+- v2.1.3: boot step 8 gh release check, make update-template applies overlay via git checkout
+- Scope boundary rule established: never touch files outside DarkFact without explicit instruction
+- All v2.1.x P0/P1 backlog items closed; fleet pulls updates independently via make update-template
+Commits: eed2919 feat: v2.1.3 | a071c57 feat: v2.1.2 | 4b10ab4 feat: onboard name warning
+
 ## 2026-04-16 — Fleet-wide v2.0.0 rollout + overlay hardening
 
 - Merged PR #12 → v2.0.0 on main, closed #8 and #10 manually

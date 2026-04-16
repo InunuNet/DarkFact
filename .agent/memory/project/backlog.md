@@ -36,21 +36,21 @@
 ## TODO — v2.1.x (Next Up)
 
 ### P0 — Codebase Purification (Research → Simplify → Clean)
-- [ ] **RESEARCH: Full codebase audit** — analyst + qa + architect + docs agents in parallel scan every file for stale, redundant, irrelevant, or dead content. Output: delete list, simplify list, keep list. No changes until lead reviews findings.
+- [x] **RESEARCH: Full codebase audit** — completed v2.1.0: deleted dead files (doc2md.py, stale reference docs, duplicate rules, orphan workflows), simplified structure, rules encoded in hooks.md.
 
 ### P0 — Claude Code Harness Fixes
-- [ ] **BUG: Write/Edit memory guards are no-ops** — `$CLAUDE_TOOL_INPUT` doesn't exist in Claude Code; hooks read stdin as JSON. Rewrite both PreToolUse guards to `input=$(cat); jq -r '.tool_input.file_path'` + case check.
-- [ ] **FEATURE: PreCompact hook** — brain.py checkpoint before context compaction; prevents silent session state loss.
-- [ ] **FEATURE: SubagentStart/SubagentStop hooks** — inject DarkFact context into spawned agents; capture results for brain.
-- [ ] **HARDENING: permissions.deny** — move security denylists from `.claude/rules/security.md` (advisory) to `settings.json` `deny` block (enforced).
-- [ ] **HARDENING: verify_workspace.sh JSON safety** — replace grep-based profile.json extraction with `python3 -c "import json,sys; print(json.load(sys.stdin).get('project_name',''))"`.
-- [ ] **DOCS: Fix stale Stop hook references** — `wrap-up.md:35`, `smoke_test.md:80` still say "Stop hook". Fix to "SessionEnd".
-- [ ] **DOCS: Makefile version + fleet-update target** — version string still `v1.1.0`; add `fleet-update` and `fleet-dry-run` targets wrapping overlay_all.sh.
+- [x] **BUG: Write/Edit memory guards are no-ops** — fixed v2.1.0: rewritten to read stdin JSON, extract file_path via python3.
+- [x] **FEATURE: PreCompact hook** — added v2.1.1: brain.py checkpoint before compaction.
+- [x] **FEATURE: SubagentStart/SubagentStop hooks** — added v2.1.2: inject agent role context; log results to brain.
+- [x] **HARDENING: permissions.deny** — added v2.1.1: deny block in settings.json (enforced when Claude Code fixes upstream bug).
+- [x] **HARDENING: verify_workspace.sh JSON safety** — fixed v2.1.2: python3 JSON parse replaces grep/sed.
+- [x] **DOCS: Fix stale Stop hook references** — fixed v2.1.0: wrap-up.md, smoke_test.md, memory.md all updated.
+- [x] **DOCS: Makefile version + fleet-update target** — fixed v2.0.0/v2.1.x: Makefile at v2.0.0, sync/sync-skills targets added.
 
 ### P1 — Self-Improvement Loop
-- [ ] **FEATURE: Pain Point Monitor (#11)** — scheduled analyst loop per project: scan-blockers → research → dev fix → maintainer commit. No human required.
-- [ ] **FEATURE: Version check on boot** — `/boot` queries `gh release view --repo InunuNet/DarkFact` for latest version; prompts `make update-template` if behind.
-- [ ] **FEATURE: `make update-template` via gh** — fetch and apply overlay from GitHub release (not local clone). Portable across any machine layout.
+- [x] **FEATURE: Pain Point Monitor (#11)** — added v2.1.2: scan-blockers → analyst research → maintainer fix → resolve-blocker.
+- [x] **FEATURE: Version check on boot** — added v2.1.3: gh release check with make update-template prompt.
+- [x] **FEATURE: `make update-template` via gh** — fixed v2.1.3: applies overlay via git checkout darkfact-upstream/main.
 
 ### Future
 - [ ] **INTEGRATION: Alembic (formerly Token Less)** — wire as web search/research tool. Add usage rules to lead.md, architect.md, analyst.md skill files. Wire into onboard for research/legal soul types.
