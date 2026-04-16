@@ -94,7 +94,23 @@ git remote -v
 
 Every project needs `origin` (your repo) and `darkfact-upstream` (template). Warn if either is missing.
 
-### 8. Report status
+### 8. Version check
+
+```bash
+current=$(cat .agent/version 2>/dev/null | tr -d '[:space:]')
+latest=$(gh release view --repo InunuNet/DarkFact --json tagName -q .tagName 2>/dev/null | sed 's/^v//')
+if [ -n "$current" ] && [ -n "$latest" ]; then
+  if [ "$current" = "$latest" ]; then
+    echo "✅ DarkFact $current — up to date"
+  else
+    echo "⚠️ DarkFact $current — latest is $latest. Run \`make update-template\` to upgrade."
+  fi
+fi
+```
+
+Non-blocking — skip silently if `gh` fails (no auth, no network, no `.agent/version`).
+
+### 9. Report status
 
 Summarise in the standard boot output:
 ```

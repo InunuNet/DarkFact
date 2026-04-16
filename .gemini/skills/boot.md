@@ -82,6 +82,8 @@ If recurring blockers are detected:
 - **🟡 RESEARCH (2 occurrences):** Before starting work, delegate to the analyst agent to do deep research on the blocker. The analyst should use web search to determine if this is a known issue, find workarounds or alternatives, and present findings before the team continues down the same path.
 - **🔴 PIVOT (3+ occurrences):** Escalate to the architect agent. The architect should evaluate whether to continue the current approach or pivot to an alternative. Present the options with tradeoffs to the user. Do NOT continue the current approach without explicit user approval.
 
+When blockers are found at either threshold, run `/pain-point-monitor` to research the root cause and record a fix (learned lesson or backlog item) rather than just noting the warning.
+
 If no recurring blockers → proceed normally.
 
 ### 7. Git remotes check
@@ -92,7 +94,23 @@ git remote -v
 
 Every project needs `origin` (your repo) and `darkfact-upstream` (template). Warn if either is missing.
 
-### 8. Report status
+### 8. Version check
+
+```bash
+current=$(cat .agent/version 2>/dev/null | tr -d '[:space:]')
+latest=$(gh release view --repo InunuNet/DarkFact --json tagName -q .tagName 2>/dev/null | sed 's/^v//')
+if [ -n "$current" ] && [ -n "$latest" ]; then
+  if [ "$current" = "$latest" ]; then
+    echo "✅ DarkFact $current — up to date"
+  else
+    echo "⚠️ DarkFact $current — latest is $latest. Run \`make update-template\` to upgrade."
+  fi
+fi
+```
+
+Non-blocking — skip silently if `gh` fails (no auth, no network, no `.agent/version`).
+
+### 9. Report status
 
 Summarise in the standard boot output:
 ```

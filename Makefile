@@ -90,16 +90,40 @@ update-template:
 	@echo "📋 DarkFact files changed since your last pull:"
 	@git diff HEAD darkfact-upstream/main -- \
 		'.agent/workflows/' '.agent/agents/' '.agent/rules/' '.agent/skills/' \
-		'execution/' 'AGENTS.md' 'Makefile' '.agent/version' 2>/dev/null | \
+		'execution/' 'AGENTS.md' '.agent/version' 2>/dev/null | \
 		grep '^diff --git' | sed 's/diff --git a\//  • /' | sed 's/ b\/.*//' || \
 		echo "  (no infrastructure changes)"
 	@echo ""
-	@echo "⚡ To apply specific files (example):"
-	@echo "   git checkout darkfact-upstream/main -- .agent/workflows/boot.md"
-	@echo "   git checkout darkfact-upstream/main -- .agent/agents/maintainer.md"
-	@echo ""
-	@echo "📌 Never run: git merge darkfact-upstream/main"
-	@echo "   (That would overwrite your project-specific files)"
+	@echo "⚡ Applying infrastructure updates..."
+	@git checkout darkfact-upstream/main -- \
+		.agent/workflows \
+		.agent/agents \
+		.agent/rules \
+		.agent/skills \
+		.agent/reference \
+		.agent/version \
+		.agent/CHANGELOG.md \
+		execution/brain.py \
+		execution/sync_agents.sh \
+		execution/sync_skills.sh \
+		execution/overlay_template.sh \
+		execution/hooks \
+		.claude/settings.json \
+		.claude/skills \
+		.gemini/skills \
+		AGENTS.md \
+		2>/dev/null || true
+	@echo "🔄 Syncing agents + skills..."
+	@bash execution/sync_agents.sh
+	@bash execution/sync_skills.sh
+	@NEW_VER=$$(cat .agent/version 2>/dev/null || echo "?"); \
+	echo ""; \
+	echo "✅ Updated to DarkFact v$$NEW_VER"; \
+	echo "   Review changes: git diff HEAD"; \
+	echo "   Commit when ready: git add -A && git commit -m 'chore: update to DarkFact v$$NEW_VER'"; \
+	echo ""; \
+	echo "   Note: Makefile was not auto-updated (self-overwrite risk)."; \
+	echo "   Check if a newer version is available: git diff HEAD darkfact-upstream/main -- Makefile"
 
 
 onboard:
