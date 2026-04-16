@@ -1,18 +1,18 @@
+# Project-Specific Rules
 
-## Project-Specific Rules
+_These override core rules when they conflict._
 
-_Generated during `/onboard`. These override core rules when they conflict._
+## Scope Boundary — HARD RULE
 
-<!-- Example — deleted during onboarding and replaced with stack-specific rules:
+**Never read, search, edit, or run commands inside any directory outside `/Users/vetus/ai/DarkFact/` unless Brad explicitly says to.**
 
-## Swift/macOS Rules
-- Use @Observable over ObservableObject (Swift 5.9+)
-- Prefer native frameworks: SwiftUI, Network.framework, AppKit
-- Target: macOS 14 Sonoma minimum
+- No `find /Users/vetus/ai/` sweeps
+- No reading sibling project files for "comparison"
+- No patching downstream projects unless instructed
+- The only exception: `overlay_all.sh` / `overlay_template.sh` when Brad explicitly asks for a fleet update
 
-## Python Rules
-- Type hints everywhere
-- Use typer for CLIs, FastAPI for APIs
-- Test with pytest
+Violation = cross-project data loss risk. No exceptions without explicit instruction.
 
--->
+## Template-Only Work
+
+All work happens in the DarkFact template. Downstream projects receive changes via overlay on Brad's command — never by direct edit from this workspace.
