@@ -1,34 +1,16 @@
 {
-  "permissions": {
-    "allow": ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "WebFetch", "WebSearch", "Task", "Skill"],
-    "ask": [
-      "Bash(rm -rf *)",
-      "Bash(git push --force:*)",
-      "Bash(dd if=/dev/zero:*)",
-      "Read(~/.ssh/*)",
-      "Read(~/.aws/*)",
-      "Write(~/.claude/settings.json)"
-    ]
-  },
   "hooks": {
     "SessionStart": [{
       "hooks": [{
         "type": "command",
         "command": "python3 execution/brain.py last-session --quiet 2>/dev/null || true"
-      }, {
-        "type": "prompt",
-        "prompt": "Run /boot now — execute every step in .agent/skills/boot.md. Verify workspace, recall last session, read goals.md + learned.md + backlog.md, check git remotes, then report status."
       }]
     }],
-    "Stop": [{
+    "SessionEnd": [{
       "hooks": [{
-        "type": "prompt",
-        "prompt": "You are the DarkFact maintainer agent. Run your end-of-session routine: (1) update .agent/memory/project/learned.md if new lessons were discovered, (2) update goals.md and backlog.md if tasks completed or new ones found, (3) append one entry to .agent/memory/project/session_log.md using this exact format: '## YYYY-MM-DD — [one-line summary]\\n- [bullet per major change]\\nCommits: [git log --oneline -3]\\n', keeping most recent at top and dropping oldest if over 20 entries, (4) run: python3 execution/brain.py wrap-up --summary \"$(git log --oneline -3 2>/dev/null || echo 'no git log')\" --tags \"session,wrap-up\""
+        "type": "command",
+        "command": "CHANGED=$(git diff --stat HEAD 2>/dev/null | wc -l | tr -d ' '); if [ \"$CHANGED\" -gt 0 ]; then echo 'Session had uncommitted changes — run /wrap-up at start of next session.'; fi"
       }]
     }]
-  },
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "BASH_DEFAULT_TIMEOUT_MS": "300000"
   }
 }

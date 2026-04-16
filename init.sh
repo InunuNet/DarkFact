@@ -121,6 +121,11 @@ EOF
 ## DONE
 EOF
 
+    cat > .agent/memory/project/session_log.md << 'EOF'
+# Session Log
+<!-- SESSIONS -->
+EOF
+
     : > .agent/memory/project/rules.md
 }
 
