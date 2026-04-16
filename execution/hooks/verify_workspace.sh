@@ -12,7 +12,7 @@ if [ ! -f "$WORKSPACE_FILE" ]; then
   exit 2
 fi
 
-WORKSPACE_NAME=$(tr -d '[:space:]' < "$WORKSPACE_FILE")
+WORKSPACE_NAME=$(sed 's/[[:space:]]*$//' < "$WORKSPACE_FILE" | head -1)
 DIR_NAME=$(basename "$PWD")
 
 # Layer 2: WORKSPACE content must match current directory name
