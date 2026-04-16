@@ -4,6 +4,57 @@ Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest
 
 ---
 
+## 2026-04-16 — Diagnostic only, gh CLI status check
+
+- Verified gh CLI auth (BDauth, keyring, all scopes present)
+- No code changes, no commits
+Commits: 2607f67 fix: gemma-3 + designer | ef393ac fix: agent dirs | 19581ca chore: backlog
+
+## 2026-04-15 — Agent model tiers confirmed, no changes
+
+- Displayed final model assignments across Claude + Gemini for all 8 agents
+- User reviewing tier assignments — no changes made this block
+- No commits this block
+Commits: 2607f67 fix: gemma-3 + designer | ef393ac fix: agent dirs | 19581ca chore: backlog
+
+## 2026-04-15 — Gemini model update, symlink bug fixed
+
+- sync_agents.sh: gemma-4 → gemma-3 for local tier
+- designer.md symlink write-through bug found and fixed — now real files
+- All 8 agents re-synced with correct Gemini 2.5 models
+- L20 added: symlinks in .claude/agents/ cause write-through corruption
+Commits: 2607f67 fix: gemma-3 + designer | ef393ac fix: agent dirs | 19581ca chore: backlog
+
+## 2026-04-15 — Model tier review, no changes
+
+- Reviewed current model_tier assignments across all 8 agents
+- Flagged analyst/designer on pro as potentially over-specced
+- Awaiting user decision before adjusting
+- No commits this block
+Commits: ef393ac fix: init.sh agent dirs | 19581ca chore: backlog | f8a4311 fix: Section 8
+
+## 2026-04-15 — Agent team wiring fixed, v1.2.14 (closes #6/#7)
+
+- init.sh now creates .claude/agents/, .gemini/agents/ before sync_agents runs
+- All 8 agents synced with correct model_tier mappings on first init
+- L20 added to learned.md — agent team was broken until dirs existed
+- Pushed + tagged v1.2.14
+Commits: ef393ac fix: init.sh agent dirs | 19581ca chore: backlog | f8a4311 fix: Section 8
+
+## 2026-04-15 — Smoke test 9-phase plan drafted, awaiting approval
+
+- Full 8-agent stack plan created for smoke test execution
+- Phase 5 identified as manual (user runs T1/T2/T3 in CLI)
+- No commits this block
+Commits: 19581ca chore: backlog | f8a4311 fix: Section 8 | 8a9ace6 fix: brain.py #4
+
+## 2026-04-15 — Bugs #4 and #5 fixed, pushed to GitHub
+
+- #4: brain.py shutil fix — wrap-up no longer crashes on scratch subdirs
+- #5: CLAUDE.md Section 8 added — PAI MEMORY/ writes redirected to DarkFact tiers
+- Both issues closed on GitHub, pushed to origin
+Commits: 19581ca chore: backlog | f8a4311 fix: Section 8 | 8a9ace6 fix: brain.py #4
+
 ## 2026-04-15 — Backlog review, no changes
 
 - Reviewed and presented full backlog to user

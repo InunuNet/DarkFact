@@ -77,6 +77,12 @@ Claude Code only supports two hook types: `"command"` (runs a shell command) and
 
 **Rule**: Always validate hook types against https://code.claude.com/docs/en/hooks before shipping.
 
+## L21: Never symlink into .claude/agents/ — sync_agents.sh writes there (2026-04-15)
+
+Symlinks from `.claude/agents/designer.md` → `.agent/agents/designer.md` cause `sync_agents.sh` to follow the symlink and overwrite the canonical source file with platform-specific generated content. The canonical `.agent/agents/*.md` files get corrupted.
+
+**Rule**: `.claude/agents/` and `.gemini/agents/` must contain only real files written by `sync_agents.sh`. Never create symlinks pointing back to `.agent/agents/` from these dirs.
+
 ## L20: Agent team dispatch is broken until .claude/agents/ is populated (2026-04-15)
 
 DarkFact agents (`.agent/agents/*.md`) are symlinked into `.claude/agents/` and `.gemini/agents/` — but only in the DarkFact template itself. Downstream projects created via `darkfact()` + `init.sh` don't get those dirs created or populated. `sync_agents.sh` targets `.claude/agents/` but fails silently if the dir is missing. Result: `@lead`, `@dev`, `@designer` dispatch to global Claude Code built-ins, not DarkFact agents. `model_tier: flash/pro` is ignored.

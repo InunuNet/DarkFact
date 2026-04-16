@@ -121,6 +121,16 @@ EOF
 ## DONE
 EOF
 
+    cat > .agent/memory/project/session_log.md << 'EOF'
+# Session Log
+
+Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest when full.
+
+---
+
+<!-- SESSIONS -->
+EOF
+
     : > .agent/memory/project/rules.md
 }
 

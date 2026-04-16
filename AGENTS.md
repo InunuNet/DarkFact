@@ -109,7 +109,7 @@ python3 execution/brain.py stats
 ## 7. Provider Notes
 
 ### Claude Code
-- Hooks in `.claude/settings.json` — SessionStart (brain recall), Stop (maintainer)
+- Hooks in `.claude/settings.json` — SessionStart (brain recall + boot), SessionEnd (wrap-up reminder), PreToolUse (workspace verify, memory guard)
 - Agent Teams: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`
 - Skills at `.claude/skills/` (symlinked to `.agent/skills/`)
 - Continue: `claude -c` | Headless: `claude -p "prompt"`
