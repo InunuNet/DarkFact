@@ -31,6 +31,8 @@ cp "$TEMPLATE/Makefile"            "$TARGET/Makefile"            2>/dev/null || 
 cp "$TEMPLATE/execution/brain.py"         "$TARGET/execution/brain.py"         2>/dev/null || true
 cp "$TEMPLATE/execution/sync_agents.sh"   "$TARGET/execution/sync_agents.sh"   2>/dev/null || true
 cp "$TEMPLATE/execution/merge_profile.py" "$TARGET/execution/merge_profile.py" 2>/dev/null || true
+# Claude Code adapter — hooks, permissions, env
+cp "$TEMPLATE/.claude/settings.json" "$TARGET/.claude/settings.json" 2>/dev/null || true
 # AGENTS.md + symlinks
 cp "$TEMPLATE/AGENTS.md" "$TARGET/AGENTS.md"
 ln -sf AGENTS.md "$TARGET/CLAUDE.md"  2>/dev/null || true
