@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
 DarkFact Migration Tool — merge_profile.py
-Merges old Workspace Template profile.json into DarkFact v1.1.0 format.
+Merges old Workspace Template profile.json into DarkFact v2.0.0 format.
 Never destroys existing fields — safe merge only.
 """
 import json, sys, datetime, os
 
 def merge_profile(target_path, old_path, project_name, **overrides):
-    """Merge old profile into DarkFact v1.1.0 format."""
+    """Merge old profile into DarkFact v2.0.0 format."""
     # Load old profile if exists
     old = {}
     if os.path.exists(old_path):
@@ -16,7 +16,7 @@ def merge_profile(target_path, old_path, project_name, **overrides):
         except Exception:
             pass
 
-    # DarkFact v1.1.0 base structure
+    # DarkFact v2.0.0 base structure
     new = {
         "project_name": overrides.get("project_name", old.get("project_name", project_name)),
         "project_type": overrides.get("project_type", old.get("project_type", "general")),
@@ -47,7 +47,7 @@ def merge_profile(target_path, old_path, project_name, **overrides):
         json.dump(new, f, indent=2)
         f.write('\n')
 
-    print(f"✅ profile.json merged → {project_name} (v1.1.0)")
+    print(f"✅ profile.json merged → {project_name} (v2.0.0)")
     return new
 
 

@@ -31,14 +31,14 @@
         "matcher": "Write",
         "hooks": [{
           "type": "command",
-          "command": "case \"$CLAUDE_TOOL_INPUT\" in */.claude/MEMORY/*|*/MEMORY/LEARNING/*) exit 2 ;; esac"
+          "command": "input=$(cat); fp=$(echo \"$input\" | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('file_path',''))\" 2>/dev/null); case \"$fp\" in */.claude/MEMORY/*|*/MEMORY/LEARNING/*) exit 2 ;; esac"
         }]
       },
       {
         "matcher": "Edit",
         "hooks": [{
           "type": "command",
-          "command": "case \"$CLAUDE_TOOL_INPUT\" in */.claude/MEMORY/*|*/MEMORY/LEARNING/*) exit 2 ;; esac"
+          "command": "input=$(cat); fp=$(echo \"$input\" | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('file_path',''))\" 2>/dev/null); case \"$fp\" in */.claude/MEMORY/*|*/MEMORY/LEARNING/*) exit 2 ;; esac"
         }]
       },
       {

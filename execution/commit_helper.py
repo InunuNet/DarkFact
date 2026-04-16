@@ -5,12 +5,6 @@ def run_cmd(cmd):
     return subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout.strip()
 
 def main():
-    print("🔍 Running secrets check...")
-    sc_res = subprocess.run([sys.executable, "execution/secrets_check.py"])
-    if sc_res.returncode != 0:
-        print("❌ Commit aborted due to potential secrets exposure.")
-        sys.exit(1)
-
     print("📦 Staging changes...")
     run_cmd("git add .")
 

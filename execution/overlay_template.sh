@@ -21,6 +21,8 @@ echo "  ✅ Backup: .agent.bak"
 #          removing any orphan files from previous template versions.
 rsync -a --delete "$TEMPLATE/.agent/workflows/" "$TARGET/.agent/workflows/"
 rsync -a --delete "$TEMPLATE/.agent/skills/"    "$TARGET/.agent/skills/"
+rsync -a --delete "$TEMPLATE/.claude/skills/"   "$TARGET/.claude/skills/"  2>/dev/null || true
+rsync -a --delete "$TEMPLATE/.gemini/skills/"   "$TARGET/.gemini/skills/"  2>/dev/null || true
 rsync -a --delete "$TEMPLATE/.agent/agents/"    "$TARGET/.agent/agents/"
 rsync -a --delete "$TEMPLATE/.agent/rules/"     "$TARGET/.agent/rules/"
 # Single files

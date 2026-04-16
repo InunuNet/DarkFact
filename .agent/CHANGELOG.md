@@ -1,5 +1,33 @@
 # DarkFact Changelog
 
+## [2.0.0] — 2026-04-16
+
+### Complete Claude Code Adapter + Fleet Hardening
+
+**Breaking**: SessionEnd hook replaces Stop hook name in all docs and rules.
+
+### Added
+- 8th canonical agent: `designer` (UI/UX design, component specs, accessibility. Never implements.)
+- `scan-blockers` command in `brain.py` — detects recurring issues across sessions
+- `overlay_all.sh` — batch updater to apply template changes across downstream fleet
+- `overlay_template.sh` hardened: rsync `--delete` flag, `settings.json` now included in overlay
+- PreToolUse guards in Claude Code hooks: workspace verify before destructive tool calls
+- `verify_workspace.sh` — standalone workspace identity check used by PreToolUse hook
+- Parallel-by-default added as core rule #1 in CLAUDE.md
+
+### Changed
+- SessionEnd hook (Claude Code): previously documented as auto-firing maintainer agent — corrected to `git diff --stat HEAD` + manual wrap-up reminder
+- `.claude/skills/` and `.gemini/skills/` are now real directories (not symlinks) — Claude Code does not follow directory symlinks
+- All version strings bumped from v1.1.0 → v2.0.0
+
+### Fixed
+- `brain.py` wrap-up crash on scratch subdirectory (closes #4)
+- Memory paths: PAI writes redirected to DarkFact tiers, never `~/.claude/MEMORY/` (closes #5)
+- `init.sh` now creates platform agent dirs before `sync_agents.sh` runs (closes #6, #7)
+- `sync_agents.sh` correctly wires full 8-agent team including designer
+
+---
+
 ## [1.0.0] — 2026-04-14
 
 ### Clean Slate — Native-First Architecture

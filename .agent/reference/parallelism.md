@@ -4,7 +4,7 @@ description: Per-provider parallelism — how each CLI handles parallel subagent
 
 # Per-Provider Parallelism
 
-DarkFact's 7-agent team model assumes parallel execution is available. It is not uniform
+DarkFact's 8-agent team model assumes parallel execution is available. It is not uniform
 across providers. This doc defines what each CLI supports and how to work within limits.
 
 ## Capability Matrix
@@ -98,7 +98,7 @@ Don't attempt multi-agent workflows in Antigravity — delegate to Claude/Gemini
 
 ## DarkFact Agent Team Design Implications
 
-The 7-agent team model is optimised for **Claude Code**. When using other providers:
+The 8-agent team model is optimised for **Claude Code**. When using other providers:
 
 | Provider | Recommendation |
 |----------|---------------|

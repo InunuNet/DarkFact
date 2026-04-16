@@ -1,15 +1,17 @@
-# DarkFact v1.1.0 Makefile
+# DarkFact v2.0.0 Makefile
 
-.PHONY: help sync-agents brain-export brain-import brain-stats commit audit test update-template onboard check-feedback
+.PHONY: help sync sync-agents sync-skills brain-export brain-import brain-stats commit audit test update-template onboard check-feedback
 
 help:
-	@echo "🏭 DarkFact v1.1.0"
+	@echo "🏭 DarkFact v2.0.0"
 	@echo ""
 	@echo "  Project Setup"
 	@echo "  make onboard           Start AI-guided project onboarding"
 	@echo ""
-	@echo "  Agents"
+	@echo "  Agents + Skills"
+	@echo "  make sync              Sync agents + skills → Claude + Gemini"
 	@echo "  make sync-agents       Sync canonical agents → Claude + Gemini"
+	@echo "  make sync-skills       Sync canonical skills → Claude + Gemini"
 	@echo ""
 	@echo "  Memory / Brain"
 	@echo "  make brain-export      Export brain memories to JSON"
@@ -25,8 +27,15 @@ help:
 	@echo "  make update-template   Pull latest DarkFact template updates"
 	@echo "  make check-feedback    Check GitHub for new issues + PRs"
 
+sync:
+	@bash execution/sync_agents.sh
+	@bash execution/sync_skills.sh
+
 sync-agents:
 	@bash execution/sync_agents.sh
+
+sync-skills:
+	@bash execution/sync_skills.sh
 
 brain-export:
 	@python3 execution/brain.py export
@@ -38,7 +47,7 @@ brain-stats:
 	@python3 execution/brain.py stats
 
 commit:
-	@python3 execution/commit_helper.py $(TYPE) $(MSG)
+	@python3 execution/commit_helper.py $(TYPE) "$(MSG)"
 
 audit:
 	@echo "Running audit..."

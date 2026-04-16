@@ -35,6 +35,9 @@
 
 ## TODO — v2.1.x (Next Up)
 
+### P0 — Codebase Purification (Research → Simplify → Clean)
+- [ ] **RESEARCH: Full codebase audit** — analyst + qa + architect + docs agents in parallel scan every file for stale, redundant, irrelevant, or dead content. Output: delete list, simplify list, keep list. No changes until lead reviews findings.
+
 ### P0 — Claude Code Harness Fixes
 - [ ] **BUG: Write/Edit memory guards are no-ops** — `$CLAUDE_TOOL_INPUT` doesn't exist in Claude Code; hooks read stdin as JSON. Rewrite both PreToolUse guards to `input=$(cat); jq -r '.tool_input.file_path'` + case check.
 - [ ] **FEATURE: PreCompact hook** — brain.py checkpoint before context compaction; prevents silent session state loss.

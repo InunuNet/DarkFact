@@ -77,7 +77,7 @@ darkfact
 2. End the session (Claude Code: `/exit` or close; Gemini: `exit`)
 
 **Pass criteria:**
-- [ ] Stop hook fires (Claude Code)
+- [ ] SessionEnd hook fires (Claude Code)
 - [ ] session_log.md gets new entry appended
 - [ ] brain wrap-up runs and confirms storage
 - [ ] SessionEnd hook fires (Gemini) — shows wrap-up reminder

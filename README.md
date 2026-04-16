@@ -2,7 +2,7 @@
 
 > Provider-agnostic agentic workspace template. Native-first, custom-last.
 
-**v1.0.0** — Claude Code (P1) · Gemini CLI (P2) · OpenCode (P3)
+**v2.0.0** — Claude Code (P1) · Gemini CLI (P2) · OpenCode (P3)
 
 ## Quick Start
 
@@ -22,8 +22,8 @@ make audit
 
 DarkFact is a convention layer for AI coding agents. It provides:
 
-- **7 agents** — lead, dev, analyst, architect, qa, docs, maintainer
-- **Native hooks** — SessionStart (brain recall), Stop (auto wrap-up)
+- **8 agents** — lead, dev, designer, analyst, architect, qa, docs, maintainer
+- **Native hooks** — SessionStart (brain recall), SessionEnd (wrap-up reminder)
 - **Semantic memory** — brain.py (Chroma vector DB) persists across sessions
 - **Self-improvement** — maintainer agent updates goals + lessons automatically
 - **Cross-platform** — one definition, Claude + Gemini configs generated
@@ -72,6 +72,7 @@ python3 execution/brain.py wrap-up -s "summary" -t "tags"
 |-------|------|------|
 | lead | pro | Orchestrates, never writes code |
 | dev | flash | Implements code |
+| designer | flash | UI/UX design, component specs, accessibility. Never implements. |
 | analyst | pro | Research, read-only |
 | architect | pro | Design decisions |
 | qa | flash | Testing + review |
@@ -82,7 +83,7 @@ python3 execution/brain.py wrap-up -s "summary" -t "tags"
 
 ```
 Session starts → brain recall → read goals + lessons → work → session ends
-  → maintainer fires → updates lessons/goals/backlog → stores in brain
+  → run /wrap-up → maintainer updates lessons/goals/backlog → stores in brain
   → next session starts smarter
 ```
 

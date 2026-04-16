@@ -10,5 +10,5 @@
 - For brain queries: `python3 execution/brain.py recall "topic" --n 3`
 
 ## After Work
-- Claude Code: maintainer agent handles this automatically via Stop hook
+- Claude Code: maintainer agent handles this automatically via SessionEnd hook
 - Other tools: `python3 execution/brain.py wrap-up -s "summary" -t "tags"`
