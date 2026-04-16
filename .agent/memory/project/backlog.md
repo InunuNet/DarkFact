@@ -33,6 +33,27 @@
 - [ ] **TEST: Smoke test all 3 CLIs** — test plan written in workflows/smoke_test.md (T1-T5). Run manually against fresh project. Results table at bottom of smoke_test.md.
 - [x] **FEATURE: `darkfact()` shell function — CLI picker** — updated ~/.zshrc: now presents Claude Code | Gemini CLI | Codex | Terminal with binary presence check for each.
 
+## TODO — v2.1.x (Next Up)
+
+### P0 — Claude Code Harness Fixes
+- [ ] **BUG: Write/Edit memory guards are no-ops** — `$CLAUDE_TOOL_INPUT` doesn't exist in Claude Code; hooks read stdin as JSON. Rewrite both PreToolUse guards to `input=$(cat); jq -r '.tool_input.file_path'` + case check.
+- [ ] **FEATURE: PreCompact hook** — brain.py checkpoint before context compaction; prevents silent session state loss.
+- [ ] **FEATURE: SubagentStart/SubagentStop hooks** — inject DarkFact context into spawned agents; capture results for brain.
+- [ ] **HARDENING: permissions.deny** — move security denylists from `.claude/rules/security.md` (advisory) to `settings.json` `deny` block (enforced).
+- [ ] **HARDENING: verify_workspace.sh JSON safety** — replace grep-based profile.json extraction with `python3 -c "import json,sys; print(json.load(sys.stdin).get('project_name',''))"`.
+- [ ] **DOCS: Fix stale Stop hook references** — `wrap-up.md:35`, `smoke_test.md:80` still say "Stop hook". Fix to "SessionEnd".
+- [ ] **DOCS: Makefile version + fleet-update target** — version string still `v1.1.0`; add `fleet-update` and `fleet-dry-run` targets wrapping overlay_all.sh.
+
+### P1 — Self-Improvement Loop
+- [ ] **FEATURE: Pain Point Monitor (#11)** — scheduled analyst loop per project: scan-blockers → research → dev fix → maintainer commit. No human required.
+- [ ] **FEATURE: Version check on boot** — `/boot` queries `gh release view --repo InunuNet/DarkFact` for latest version; prompts `make update-template` if behind.
+- [ ] **FEATURE: `make update-template` via gh** — fetch and apply overlay from GitHub release (not local clone). Portable across any machine layout.
+
+### Future
+- [ ] **INTEGRATION: Alembic (formerly Token Less)** — wire as web search/research tool. Add usage rules to lead.md, architect.md, analyst.md skill files. Wire into onboard for research/legal soul types.
+- [ ] **DOCS: Full documentation suite** — Architecture doc, contributor guide, agent authoring guide, hook reference, provider comparison. Auto-maintained by docs agent in self-improvement loop.
+- [ ] **FEATURE: markitdown recommended addon** — PDF→Markdown for research/legal soul types.
+
 ## Cross-Platform (Deferred — Low Priority)
 
 - [ ] Audit `init.sh` for macOS/Linux/Windows differences (`sed -i`, `date -u`)
