@@ -114,7 +114,7 @@ python3 execution/brain.py wrap-up -s "summary" --blockers "tag1"
 ### Claude Code
 - Hooks in `.claude/settings.json` — SessionStart (brain recall + boot), SessionEnd (wrap-up reminder), PreToolUse (workspace verify, memory guard)
 - Agent Teams: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`
-- Skills at `.claude/skills/` (symlinked to `.agent/skills/`)
+- Skills at `.claude/skills/` (copied from `.agent/skills/` — not symlinked, Claude Code doesn't follow dir symlinks)
 - Continue: `claude -c` | Headless: `claude -p "prompt"`
 
 ### Gemini CLI

@@ -254,6 +254,17 @@ sync_agents() {
     fi
 }
 
+# ── Sync skills ──────────────────────────────────────────────────────────────
+sync_skills() {
+    echo -e "📋 Syncing skills..."
+    for dest in .claude/skills .gemini/skills; do
+        mkdir -p "$dest"
+        for skill in .agent/skills/*.md; do
+            [ -f "$skill" ] && cp "$skill" "$dest/"
+        done
+    done
+}
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 main() {
     echo ""
@@ -268,6 +279,7 @@ main() {
     setup_secrets
     setup_git
     sync_agents
+    sync_skills
 
     echo ""
     echo -e "${GREEN}✅ Workspace scaffolded.${NC}"
