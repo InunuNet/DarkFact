@@ -4,6 +4,31 @@ Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest
 
 ---
 
+## 2026-04-17 (Session)
+
+**Focus:** Boot reliability — every session gets full context automatically
+
+**Shipped:**
+- Merged PR #16 with team review fixes: `full_boot.sh` now injects `rules.md` first, caps `learned.md` at 80 lines, moves `brain recall` + `scan-blockers` from prompt into command hook
+- `subagent_start.sh` upgraded: team agents now receive `rules.md` + last 40 lines of `learned.md`
+- `make update-template` replaced git remote approach with `gh api tarball` — no setup needed
+- Added `.claude/rules/scope.md` + CLAUDE.md hard stops: PAI (`~/.claude/PAI/`) is never in scope
+- Fixed #15: removed spurious `Write(~/.claude/settings.json)` ask rule
+
+**Key learning:** The boot prompt hook was never reliable — agents skipped it. Command hooks are the only enforcement mechanism. `rules.md` was the critical missing piece; without it, agents had to be told the scope boundary every session.
+
+---
+
+## 2026-04-17 — Alembic integration plan designed
+
+- Identified "LAMBEC" = Alembic project at /Users/vetus/ai/Alembic/ (inunu/alembic on GitHub)
+- Alembic: HTML→Markdown proxy, 5-stage cascade, 84–98% token reduction, already v1.0.0
+- Designed 3-layer integration plan: init.sh install + /web-fetch skill + analyst/architect/lead soul updates
+- No MCP wrapper or HTTP proxy daemon needed — CLI is sufficient
+- No GitHub fork needed — already in inunu org
+- Plan ready to implement next session; goals.md Alembic entry moves from Future → Active P1
+Commits: 19435ee chore: wrap-up — tick v2.1.x backlog items (no new commits this session)
+
 ## 2026-04-17 — DarkFact v2.1.x: harness hardening, purification, self-improvement loop
 
 - v2.1.0: full codebase purification — deleted dead files, stale docs, duplicate rules, orphan workflows
