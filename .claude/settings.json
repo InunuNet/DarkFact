@@ -14,8 +14,7 @@
       "Read(~/.gnupg/*)"
     ],
     "ask": [
-      "Bash(chmod 777 *)",
-      "Write(~/.claude/settings.json)"
+      "Bash(chmod 777 *)"
     ]
   },
   "hooks": {
@@ -25,7 +24,7 @@
         "command": "bash execution/hooks/full_boot.sh 2>/dev/null || true"
       }, {
         "type": "prompt",
-        "prompt": "Full boot context was just injected above (workspace, last session, goals, learned, backlog, git remotes). Also run: python3 execution/brain.py recall 'current work' --n 3 and python3 execution/brain.py scan-blockers. Then report using the standard format: ✅ WORKSPACE, Last session, Active goals count, Open backlog items, ➡️ Ready."
+        "prompt": "Full boot context was just injected above — workspace, last session, project rules, goals, learned, backlog, brain recall, blockers, and git remotes. Read the injected BOOT CONTEXT carefully. Then report boot status using this exact format: ✅ WORKSPACE: [name] | Last session: [1-line summary] | Goals: [count] active | Backlog: [count] open items | Rules loaded: yes | ➡️ Ready."
       }]
     }],
     "SessionEnd": [{
