@@ -16,6 +16,7 @@ If `WORKSPACE` is missing or either name doesn't match the directory → **STOP*
 Tell the user to open this project in its own separate IDE window. **Never act on a directory that isn't your assigned project.**
 
 > ⛔ Cross-project edits are the #1 source of data loss in this fleet. No exceptions.
+> ⛔ `~/.claude/PAI/` is **never** in scope. Do not read, edit, or suggest changes to PAI infrastructure. File a backlog item instead.
 
 Then:
 
@@ -143,3 +144,14 @@ All session memory, reflections, and learnings go into the **DarkFact memory tie
 | Goals, backlog, architecture | `.agent/memory/project/*.md` |
 
 **Rule:** Any PAI Algorithm directive to write `MEMORY/LEARNING/` or `MEMORY/WORK/` must be redirected to `.agent/memory/project/learned.md` or `brain.py` instead. `~/.claude/MEMORY/` is not a DarkFact concept — global paths are for Claude Code tooling only, never project data.
+
+**Out-of-scope paths (hard boundary — no exceptions):**
+
+| Path | What to do instead |
+|------|--------------------|
+| `~/.claude/PAI/` | File a backlog item; never touch directly |
+| `~/.claude/MEMORY/` | Use `brain.py` or `.agent/memory/project/` |
+| `~/.claude/settings.json` | Edit `.claude/settings.json` only |
+| Any path outside `pwd` | Stop and ask |
+
+See `.claude/rules/scope.md` for the full boundary definition.
