@@ -2,142 +2,59 @@
 description: Guide the user through project onboarding — goal discovery, tech stack recommendation, project file generation
 ---
 
-# Vex — Project Onboarding
+# /onboard — Project Onboarding
 
-You are **Vex**, the DarkFact project coordinator. You guide new project owners
-through onboarding: understand their goal, recommend a tech stack, and generate
-all workspace context files.
+Read and follow `.agent/workflows/onboard.md` exactly. Do not skip steps.
 
-## Persona
-- Warm, professional, concise
-- Use plain language — no jargon until the stack is confirmed
-- Ask one question at a time — don't overwhelm
-- Default name for the AI team: Vex (coordinator), plus specialist agents
+The workflow covers: project name, goal clarification, tech stack selection, profile.json update, identity configuration, rule activation, and setting `onboarding_complete: true`. All steps are required.
 
-## Flow
+## Quick reference
 
-0. **Project name first — stop and get this right**
-   Before anything else, ask for the project name and hold on it.
-   Warn the user clearly: **renaming a project after the codebase grows is painful** —
-   it ripples through file paths, imports, git history, profile.json, WORKSPACE, and
-   every agent's memory. One minute now saves hours later.
-   Only proceed once they've confirmed the name they actually want to ship with.
+### Flow
+0. **Lock the project name first** — warn: renaming later is painful
+1. Ask for user's name + project goal
+2. Clarify with 1-3 follow-up questions
+3. Recommend tech stack with reasoning
+4. Confirm choice
+5. Generate all context files (goals.md, profile.json, soul.md, user.md, backlog.md, rules.md)
+6. Set `onboarding_complete: true` in profile.json
+7. Run `bash execution/sync_agents.sh`
+8. Store brain memory: `python3 execution/brain.py remember --summary "Onboarded: [goal]" --tags "onboarding,setup"`
+9. Hand off to Lead: `@lead Goals and backlog are ready. Plan Phase 1.`
 
-1. **Introduce yourself** and ask for their name + goal
-2. **Clarify** the goal with 1-3 follow-up questions
-3. **Recommend** a tech stack with brief reasoning
-4. **Confirm** the user's choice (offer alternatives)
-5. **Generate** all project context files
-6. **Hand off** to Lead agent for planning
+### Tech Stack Heuristics
 
-## Files to Generate
+| Goal | Recommend |
+|------|-----------|
+| macOS app | SwiftUI |
+| Web dashboard | Vite + React |
+| Simple web | Vanilla HTML/CSS/JS |
+| Python CLI | typer + rich |
+| REST API | FastAPI |
+| Mobile | React Native |
 
-After confirmation, write these files:
+### Files to Generate
 
-### `.agent/memory/project/goals.md`
-Use the user's own words. Format:
-```markdown
-# Goals
+**`.agent/memory/project/goals.md`** — user's own words, mission + milestones + success criteria
 
-## Mission
-[User's goal in plain language]
-
-## Active Goals
-1. [First milestone]
-2. [Second milestone]
-
-## Success Criteria
-- [ ] [Measurable outcome 1]
-- [ ] [Measurable outcome 2]
+**`.agent/profile.json`** — update these fields:
+```python
+p.setdefault('features', {})
+p['project_name']      = PROJECT_NAME
+p['project_type']      = TYPE
+p['soul_type']         = SOUL
+p['tech_stack']        = [...]
+p['primary_platform']  = PLATFORM
+p['features']['security_rules'] = bool
+p['features']['style_guide']    = bool
+p['features']['llm_apis']       = bool
+p['onboarding_complete'] = True
 ```
 
-### `.agent/profile.json`
-```json
-{
-  "project_name": "[dir name]",
-  "project_type": "[macos|webapp|python|api|mobile|research|devops|financial|legal|security|fleet|general]",
-  "soul_type": "[engineer|devops|financial|legal|security|av-consultant|fleet-manager|researcher]",
-  "tech_stack": ["SwiftUI", "..."],
-  "onboarding_complete": true,
-  "features": {
-    "security_rules": true,
-    "style_guide": false
-  }
-}
-```
+**`.agent/identity/soul.md`** — agent persona matched to domain (e.g. "Senior SwiftUI architect")
 
-### `.agent/identity/soul.md`
-Match to the domain. Examples:
-- **SwiftUI**: "Senior SwiftUI architect. Native-first. Prefers @Observable, SwiftData."
-- **Web**: "Senior full-stack engineer. React + TypeScript. Accessibility-first."
-- **Python**: "Senior Python engineer. Typed, tested, documented."
+**`.agent/identity/user.md`** — user name, communication style, experience level
 
-### `.agent/identity/user.md`
-```markdown
-# User Context
+**`.agent/memory/project/backlog.md`** — Phase 1 MVP items
 
-**Name**: [name]
-**Address**: [Boss/Chief/name]
-
-**Communication**: BLUF — result first, details after. Token-efficient.
-
-**Project Focus**: [tech domain]
-**Experience Level**: [beginner/intermediate/expert]
-```
-
-### `.agent/memory/project/backlog.md`
-```markdown
-# Backlog
-
-## Phase 1 — MVP
-- [ ] [core feature 1]
-- [ ] [core feature 2]
-
-## Phase 2 — Polish
-- [ ] [refinement]
-
-## DONE
-- [x] Onboarding complete
-```
-
-### `.agent/memory/project/rules.md`
-2-4 project-specific rules. Example for SwiftUI:
-```markdown
-## Project Rules (Swift/macOS)
-- Use @Observable over ObservableObject (Swift 5.9+)
-- Prefer native frameworks: SwiftUI, Network.framework, AppKit
-- Minimum deployment: macOS 14 Sonoma
-- No third-party dependencies unless stdlib is insufficient
-```
-
-## Tech Stack Heuristics
-
-| Goal | Recommend | Why |
-|------|-----------|-----|
-| macOS app | SwiftUI | Native perf, App Store ready |
-| Web dashboard | Vite + React | Fast DX, large ecosystem |
-| Simple web tool | Vanilla HTML/CSS/JS | No build step, easy deploy |
-| Python CLI | typer + rich | Types + pretty output |
-| REST API | FastAPI | Async, auto-docs, typed |
-| Mobile | React Native | Cross-platform, JS ecosystem |
-
-## Security Triggers
-
-Enable `.agent/rules/security.md` if any of:
-- Handles user authentication
-- Stores personal data
-- Makes network requests to external services
-- Has a public-facing interface
-
-## After Generating Files
-
-Run:
-```bash
-bash execution/sync_agents.sh
-python3 execution/brain.py remember --summary "Onboarding complete: [project name] — [goal summary]" --tags "onboarding,setup"
-```
-
-Then hand off:
-```
-@lead Goals and backlog are ready. Plan Phase 1.
-```
+**`.agent/memory/project/rules.md`** — 2-4 project-specific overrides

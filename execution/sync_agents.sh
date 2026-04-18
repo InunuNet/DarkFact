@@ -22,7 +22,7 @@ map_gemini_model() {
   case "$1" in
     pro) echo "gemini-2.5-pro" ;;
     flash) echo "gemini-2.5-flash" ;;
-    local) echo "gemma-3" ;;
+    local) echo "gemini-2.5-flash-lite" ;;
     *) echo "gemini-2.5-flash" ;;
   esac
 }
@@ -44,10 +44,10 @@ map_gemini_tool() {
   case "$1" in
     read) echo "read_file" ;;
     write) echo "write_file" ;;
-    edit) echo "edit_file" ;;
+    edit) echo "replace" ;;
     shell) echo "run_shell_command" ;;
     grep) echo "grep_search" ;;
-    search) echo "web_search" ;;
+    search) echo "google_search" ;;
     web) echo "web_fetch" ;;
     *) echo "$1" ;;
   esac
@@ -58,9 +58,10 @@ map_tools() {
   local tools_csv="${2:-}"
   local result=""
 
-  [ -z "$tools_csv" ] && echo "" && return
+  # Remove brackets and split by comma
+  clean_csv=$(echo "$tools_csv" | tr -d '[]' | tr ',' '\n')
 
-  while IFS=',' read -r tool_item; do
+  while IFS= read -r tool_item; do
     tool_item=$(echo "$tool_item" | xargs)
     [ -z "$tool_item" ] && continue
     if [ "$platform" = "claude" ]; then
@@ -69,11 +70,11 @@ map_tools() {
       mapped=$(map_gemini_tool "$tool_item")
     fi
     if [ -n "$result" ]; then
-      result="$result, $mapped"
+      result="$result, \"$mapped\""
     else
-      result="$mapped"
+      result="\"$mapped\""
     fi
-  done <<< "$(echo "$tools_csv" | tr ',' '\n')"
+  done <<< "$clean_csv"
   echo "$result"
 }
 

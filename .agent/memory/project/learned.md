@@ -1,5 +1,23 @@
 # Learned
 
+## L29: PreToolUse hooks — pipe stdin directly to python3, never buffer through a shell variable (2026-04-18)
+
+`input=$(cat); echo "$input" | python3` breaks on large inputs: `echo` mangles JSON containing newlines, backslashes, and `-n` at line start. The pattern works in unit tests but silently corrupts large tool payloads (Write with multi-KB content). The fix: don't buffer at all — pipe stdin directly: `fp=$(python3 -c "..." )` where python3 reads `sys.stdin` from the hook's live stdin pipe.
+
+**Rule**: In PreToolUse hook commands, pipe directly: `fp=$(python3 -c "import json,sys; ..." 2>/dev/null)`. Never do `input=$(cat); echo "$input" | python3`.
+
+## L28: subagent_start.sh must build JSON entirely in python3 — no shell string escaping (2026-04-18)
+
+Shell `sed 's/"/\\"/g'` only escapes double quotes. It misses backslashes, tabs, control characters, and multi-byte sequences that appear in markdown agent files and learned.md. Injected context that contains any of these produces malformed JSON, silently dropping subagent context.
+
+**Rule**: For any shell script that must emit JSON containing arbitrary file content, build the entire JSON object in python3 using `json.dumps()`. No shell interpolation into JSON strings.
+
+## L27: Gemini CLI settings.json hook entries require `"type": "command"` (2026-04-18)
+
+Gemini CLI rejects hook entries without an explicit `type` field. The Claude Code format and Gemini CLI format both require `{"type": "command", "command": "..."}` — bare `{"command": "..."}` silently skips the hook on Gemini.
+
+**Rule**: Every hook entry in `.gemini/settings.json` must have `"type": "command"`. Validate with `python3 -m json.tool` and manually confirm hooks fire after any settings change.
+
 ## L26: overlay_template.sh must copy .claude/settings.json (2026-04-16)
 
 `cp -r` only merges into the destination — it never deletes files removed upstream. Three fleet projects (Mumbl AI, PortPulse, Mlilo) had the Stop hook bug long after it was fixed in the template because `settings.json` wasn't in the overlay list. Orphan files from restructured dirs (skills, agents, rules) accumulate silently across versions.
@@ -159,3 +177,4 @@ DarkFact must use `major.minor.patch` versioning:
 - **Major** (`N.0.0`): Breaking changes (restructured `.agent/` layout, renamed core files, changed brain schema).
 
 **v1.1.1 was skipped** — bug fixes landed in v1.2.0 without a patch tag. Don't repeat. Tag every release immediately after pushing. Use `git tag vX.Y.Z && git push origin vX.Y.Z`.
+{"timestamp":"2026-04-17T23:15:00+00:00","effort_level":"comprehensive","task_description":"comprehensive audit and fix plan for darkfact template","criteria_count":80,"criteria_passed":80,"criteria_failed":0,"prd_id":"20260417-202300_darkfact-template-comprehensive-fix","implied_sentiment":7,"reflection_q1":"Running 7 parallel agents on non-overlapping scopes gave complete coverage with zero redundancy — this is the right pattern for comprehensive audits","reflection_q2":"A smarter algorithm would have run make test-init first as a canary — the smoke test failure would have immediately surfaced the function-order bug without needing deep analysis","reflection_q3":"Thinking/FirstPrinciples skill would have helped frame the provider-agnosticism mission earlier; Research skill was partially used via analyst subagents","within_budget":true}

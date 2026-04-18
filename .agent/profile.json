@@ -12,18 +12,22 @@
   "status": "active",
   "_comment_status": "Workspace lifecycle: active | archive. Set to archive for superseded workspaces \u2014 boot will warn.",
   "_comment_onboarding": "Fields below are populated by /onboard. Do not remove stubs.",
-  "onboarding_complete": false,
-  "project_name": "",
-  "project_type": "",
-  "soul_type": "",
-  "tech_stack": [],
+  "onboarding_complete": true,
+  "project_name": "DarkFact",
+  "project_type": "fleet",
+  "soul_type": "fleet-manager",
+  "tech_stack": [
+    "Bash",
+    "Python",
+    "Markdown"
+  ],
   "features": {
     "brain": true,
     "hooks": true,
     "agent_teams": true,
     "skills": true,
     "telos_lite": true,
-    "security_rules": false,
+    "security_rules": true,
     "style_guide": false,
     "llm_apis": false
   },

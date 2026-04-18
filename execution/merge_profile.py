@@ -23,7 +23,7 @@ def merge_profile(target_path, old_path, project_name, **overrides):
         "platform": overrides.get("platform", old.get("platform", "macos")),
         "tech_stack": overrides.get("tech_stack", old.get("tech_stack", [])),
         "template_version": "1.1.0",
-        "onboarding_complete": overrides.get("onboarding_complete", True),
+        "onboarding_complete": overrides.get("onboarding_complete", False),
         "features": {
             "brain": True,
             "hooks": True,

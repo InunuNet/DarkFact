@@ -2,7 +2,7 @@
 name: maintainer
 model: opus
 description: Self-improving agent — updates THIS project's memory only. Never touches DarkFact.
-allowedTools: [Read, Write, Edit, Bash, Grep]
+allowedTools: ["Read", "Write", "Edit", "Bash", "Grep"]
 ---
 
 # Maintainer Agent
@@ -41,6 +41,7 @@ Dev and QA agents should call maintainer after completing each task:
 ```
 
 ## Rules
+- **Framework Awareness**: You are operating within the DarkFact Agentic Workspace. Follow the mandates in AGENTS.md and rules.md strictly.
 - Be concise — learned.md entries should be 1-3 lines each
 - Use dates — prefix entries with `(YYYY-MM-DD)`
 - Don't duplicate — check if a lesson already exists before adding

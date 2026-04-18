@@ -64,13 +64,14 @@ python3 execution/brain.py wrap-up -s "summary" --blockers "tag1"
 
 ## 3. Rules
 
-1. **Parallel by Default** — decompose into independent workstreams, spin up agents simultaneously. Sequential is the exception.
-2. **Native First** — use platform features (hooks, agents, skills, MCP) before custom code
-3. **Least Tokens** — be terse. BLUF. Bullets over prose.
-4. **No Placeholders** — write real implementations, not TODOs
-5. **Read Before Write** — check goals.md and learned.md before starting work
-6. **Self-Anneal** — error → fix → update learned.md. Pivot after 3 failed attempts
-7. **Wrap Up** — at session end, store a summary in brain
+1. **The Golden Rule** — DarkFact must always use its own system (this workspace) to work on itself. Exercise the team, the hooks, and the tiered memory to maintain the framework.
+2. **Parallel by Default** — decompose into independent workstreams, spin up agents simultaneously. Sequential is the exception.
+3. **Native First** — use platform features (hooks, agents, skills, MCP) before custom code
+4. **Least Tokens** — be terse. BLUF. Bullets over prose.
+5. **No Placeholders** — write real implementations, not TODOs
+6. **Read Before Write** — check goals.md and learned.md before starting work
+7. **Self-Anneal** — error → fix → update learned.md. Pivot after 3 failed attempts
+8. **Wrap Up** — at session end, store a summary in brain
 
 > **Project-specific rules** in `.agent/memory/project/rules.md` take precedence
 > over these when they conflict (e.g. a Swift project overrides CLI-first defaults).

@@ -48,19 +48,26 @@ Format exactly:
 Commits: [git log --oneline -3]
 ```
 
-### 5. Tag blockers (if any)
+### 5. Auto-detect blockers
 
-If the session hit any recurring issues, blockers, or unsolved problems — note them as blocker tags for the `--blockers` flag in the next step. Use short, kebab-case identifiers (e.g., `tauri-popup`, `webview-rendering`, `api-rate-limit`).
+Run blocker scan and note any recurring issues for tagging:
+```bash
+python3 execution/brain.py scan-blockers 2>/dev/null
+```
 
-If no blockers this session, skip this step.
+If the scan reports recurring blockers, collect their short identifiers (e.g., `tauri-popup`, `api-rate-limit`). If no blockers, omit the `--blockers` flag in step 6.
 
 ### 6. Store brain summary
 
 ```bash
-python3 execution/brain.py wrap-up --summary "$(git log --oneline -3 2>/dev/null || echo 'no commits')" --tags "session,wrap-up" --blockers "blocker1,blocker2"
+# With blockers detected in step 5:
+python3 execution/brain.py wrap-up --summary "$(git log --oneline -3 2>/dev/null || echo 'no commits')" --tags "session,wrap-up" --blockers "blocker-id-1,blocker-id-2"
+
+# Without blockers:
+python3 execution/brain.py wrap-up --summary "$(git log --oneline -3 2>/dev/null || echo 'no commits')" --tags "session,wrap-up"
 ```
 
-Omit `--blockers` if no blockers this session.
+Use real blocker identifiers from step 5 — never paste the placeholder text literally.
 
 ### 7. Confirm
 
@@ -71,4 +78,5 @@ Report:
 - Backlog: [N items ticked / N added]
 - Session log: entry appended
 - Brain: stored [mem_ID]
+- Blockers: [tags logged / none]
 ```

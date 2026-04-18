@@ -21,10 +21,10 @@
     "SessionStart": [{
       "hooks": [{
         "type": "command",
-        "command": "bash execution/hooks/full_boot.sh 2>/dev/null || true"
+        "command": "bash execution/hooks/full_boot.sh"
       }, {
         "type": "prompt",
-        "prompt": "Full boot context was just injected above — workspace, last session, project rules, goals, learned, backlog, brain recall, blockers, and git remotes. Read the injected BOOT CONTEXT carefully. Then report boot status using this exact format: ✅ WORKSPACE: [name] | Last session: [1-line summary] | Goals: [count] active | Backlog: [count] open items | Rules loaded: yes | ➡️ Ready."
+        "prompt": "You are now operating within the DarkFact Agentic Workspace. A full boot context was just injected above — framework identity (AGENTS.md), workspace, last session, project rules, goals, learned, backlog, brain recall, blockers, and git remotes. Read the injected BOOT CONTEXT carefully. You have 8 specialized agents at your disposal (@lead, @dev, @designer, etc.). Your primary goal is autonomous self-improvement for this project. Report boot status using this exact format: ✅ WORKSPACE: [name] | 🤖 Agents: 8 roles active | Last session: [1-line summary] | Goals: [count] active | Backlog: [count] open items | Rules loaded: yes | ➡️ Ready."
       }]
     }],
     "SessionEnd": [{
@@ -36,7 +36,7 @@
     "PreCompact": [{
       "hooks": [{
         "type": "command",
-        "command": "input=$(cat); trigger=$(echo \"$input\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('compaction_trigger','unknown'))\" 2>/dev/null || echo 'unknown'); recent=$(git log --oneline -5 2>/dev/null | tr '\\n' '; ' || echo 'no git'); python3 execution/brain.py remember --summary \"Pre-compaction checkpoint ($trigger). Recent commits: $recent\" --tags \"compaction,checkpoint\" 2>/dev/null || true",
+        "command": "input=$(cat); trigger=$(printf '%s' \"$input\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('compaction_trigger','unknown'))\" 2>/dev/null || echo 'unknown'); recent=$(git log --oneline -5 2>/dev/null | tr '\\n' '; ' || echo 'no git'); python3 execution/brain.py remember --summary \"Pre-compaction checkpoint ($trigger). Recent commits: $recent\" --tags \"compaction,checkpoint\" 2>/dev/null || true",
         "timeout": 30
       }]
     }],
@@ -67,14 +67,14 @@
         "matcher": "Write",
         "hooks": [{
           "type": "command",
-          "command": "input=$(cat); fp=$(echo \"$input\" | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('file_path',''))\" 2>/dev/null); case \"$fp\" in */.claude/MEMORY/*|*/MEMORY/LEARNING/*) exit 2 ;; esac"
+          "command": "fp=$(python3 -c \"import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('file_path',''))\" 2>/dev/null); case \"$fp\" in */.claude/MEMORY/*|*/MEMORY/LEARNING/*|*/.claude/PAI/*) exit 2 ;; esac"
         }]
       },
       {
         "matcher": "Edit",
         "hooks": [{
           "type": "command",
-          "command": "input=$(cat); fp=$(echo \"$input\" | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('file_path',''))\" 2>/dev/null); case \"$fp\" in */.claude/MEMORY/*|*/MEMORY/LEARNING/*) exit 2 ;; esac"
+          "command": "fp=$(python3 -c \"import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('file_path',''))\" 2>/dev/null); case \"$fp\" in */.claude/MEMORY/*|*/MEMORY/LEARNING/*|*/.claude/PAI/*) exit 2 ;; esac"
         }]
       },
       {

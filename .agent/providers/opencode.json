@@ -1,0 +1,33 @@
+{
+  "name": "opencode",
+  "display": "OpenCode",
+  "config_dir": null,
+  "agents_dir": null,
+  "skills_dir": null,
+  "rules_dir": null,
+  "instructions_file": "AGENTS.md",
+  "settings_file": null,
+  "supports_hooks": false,
+  "supports_rules": false,
+  "supports_dir_symlinks": true,
+  "hook_types": [],
+  "hook_events": [],
+  "models": {
+    "pro":   { "id": "provider-dependent", "context_window": null, "tier": "best" },
+    "flash": { "id": "provider-dependent", "context_window": null, "tier": "balanced" },
+    "local": { "id": "provider-dependent", "context_window": null, "tier": "fast" }
+  },
+  "tool_map": {},
+  "session": {
+    "manual_boot": true,
+    "manual_wrapup": true
+  },
+  "memory_paths": {
+    "project": ".agent/memory/project/",
+    "scratch": ".agent/memory/scratch/",
+    "brain":   ".agent/memory/brain/"
+  },
+  "headless": "opencode run \"PROMPT\"",
+  "resume": null,
+  "notes": "OpenCode reads AGENTS.md natively. No hook system. Run /boot and /wrap-up manually. Memory always goes to brain.py, never to AGENTS.md or provider-specific paths."
+}

@@ -1,0 +1,55 @@
+{
+  "name": "claude-code",
+  "display": "Claude Code",
+  "config_dir": ".claude",
+  "agents_dir": ".claude/agents",
+  "skills_dir": ".claude/skills",
+  "rules_dir": ".claude/rules",
+  "instructions_file": "CLAUDE.md",
+  "settings_file": ".claude/settings.json",
+  "supports_hooks": true,
+  "supports_rules": true,
+  "supports_dir_symlinks": false,
+  "hook_types": ["command", "prompt"],
+  "hook_events": [
+    "SessionStart", "SessionEnd",
+    "PreToolUse", "PostToolUse",
+    "PreCompact", "PostCompact",
+    "SubagentStart", "SubagentStop",
+    "UserPromptSubmit"
+  ],
+  "models": {
+    "pro":   { "id": "claude-opus-4-7",              "context_window": 200000, "tier": "best" },
+    "flash": { "id": "claude-sonnet-4-6",             "context_window": 200000, "tier": "balanced" },
+    "local": { "id": "claude-haiku-4-5-20251001",     "context_window": 200000, "tier": "fast" }
+  },
+  "tool_map": {
+    "read":   "Read",
+    "write":  "Write",
+    "edit":   "Edit",
+    "shell":  "Bash",
+    "grep":   "Grep",
+    "glob":   "Glob",
+    "search": "WebSearch",
+    "web":    "WebFetch",
+    "agent":  "Agent",
+    "task":   "Task"
+  },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "BASH_DEFAULT_TIMEOUT_MS": "300000"
+  },
+  "session": {
+    "optimal_budget_tokens": 150000,
+    "compact_threshold": 0.8,
+    "max_session_turns": 200
+  },
+  "memory_paths": {
+    "project": ".agent/memory/project/",
+    "scratch": ".agent/memory/scratch/",
+    "brain":   ".agent/memory/brain/",
+    "forbidden": ["~/.claude/MEMORY/", "~/.claude/PAI/", "~/.claude/settings.json"]
+  },
+  "headless": "claude -p \"PROMPT\"",
+  "resume": "claude -c"
+}

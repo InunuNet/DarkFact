@@ -4,6 +4,20 @@ Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest
 
 ---
 
+## 2026-04-18 — P0+P1 template fixes: init.sh, hooks, providers, clean-room template
+
+- `init.sh` rewritten: function hoisting fix (write_profile above main), preflight checks, full scaffold from template/
+- `template/` clean-room created: no Vex/DarkFact identity, generic AGENTS.md, full-schema profile.json stub
+- `.agent/providers/` registry created: claude-code.json, gemini-cli.json, opencode.json with baked model constants
+- `execution/sync_rules.sh` fixed: rsync --delete, missing-source guard, no more destroy-on-sync
+- `execution/hooks/verify_workspace.sh`: worktree allowlist, fail-safe profile parse
+- `execution/hooks/subagent_start.sh`: full python3 JSON build, no shell sed escaping
+- `.claude/settings.json`: PreToolUse guards extended to `~/.claude/PAI/*`, stdin piping fixed
+- `.gemini/settings.json`: added `"type": "command"` to all hook entries
+- `.agent/skills/wrap-up.md`: auto-detect blockers via scan-blockers, removed manual placeholder
+- `make test-init` passes all 9 checks ✅
+Commits: 0871f18 chore: wrap-up — session log + brain stored
+
 ## 2026-04-17 (Session)
 
 **Focus:** Boot reliability — every session gets full context automatically

@@ -6,7 +6,18 @@
 WORKSPACE_FILE="WORKSPACE"
 PROFILE_FILE=".agent/profile.json"
 
-echo "════ BOOT CONTEXT ════════════════════════════════"
+echo "════ BOOT CONTEXT (DarkFact Framework v2.1.0) ════"
+echo "You are operating within the DarkFact Agentic Workspace."
+echo "Core Mandates: Specialized agents, Tiered memory, Autonomous self-improvement."
+echo ""
+
+# Step 0: System Identity
+echo "--- SYSTEM IDENTITY ---"
+if [ -f "AGENTS.md" ]; then
+  cat AGENTS.md
+else
+  echo "⛔ AGENTS.md missing — run bash init.sh"
+fi
 echo ""
 
 # Step 0+1: Workspace verification
@@ -77,14 +88,14 @@ else
 fi
 echo ""
 
-# Step 5: Semantic recall — current work context
-echo "--- BRAIN RECALL ---"
-python3 execution/brain.py recall "current work session goals" --n 3 2>/dev/null || echo "(no brain data)"
+# Step 5: Semantic recall — what we were working on
+echo "--- RECENT WORK ---"
+python3 execution/brain.py recall "$(head -3 .agent/memory/project/goals.md 2>/dev/null | tail -1 || echo 'project goals')" --n 2 2>/dev/null || true
 echo ""
 
-# Step 6: Recurring blockers
+# Step 6: Recurring blockers (exits 1 when blockers found, 0 when none)
 echo "--- BLOCKERS ---"
-python3 execution/brain.py scan-blockers 2>/dev/null || echo "(none)"
+python3 execution/brain.py scan-blockers 2>/dev/null
 echo ""
 
 # Step 7: Git remotes

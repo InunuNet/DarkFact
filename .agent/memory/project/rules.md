@@ -1,18 +1,12 @@
-# Project-Specific Rules
+# Rules
 
-_These override core rules when they conflict._
+- **Native First**: Use platform-native features (hooks, agents, skills) before writing custom shell scripts or Python code.
+- **Bash 3.2 Compatibility**: All shell scripts must run on macOS default bash (v3.2) without requiring GNU coreutils.
+- **JSON Safety**: Always use `python3 -c "import json..."` or `jq` to parse/generate JSON; never use shell string interpolation.
+- **Context Integrity**: Never commit or log secrets; strictly enforce workspace boundaries as defined in `scope.md`.
 
-## Scope Boundary — HARD RULE
+## Memory Management
 
-**Never read, search, edit, or run commands inside any directory outside `/Users/vetus/ai/DarkFact/` unless Brad explicitly says to.**
-
-- No `find /Users/vetus/ai/` sweeps
-- No reading sibling project files for "comparison"
-- No patching downstream projects unless instructed
-- The only exception: `overlay_all.sh` / `overlay_template.sh` when Brad explicitly asks for a fleet update
-
-Violation = cross-project data loss risk. No exceptions without explicit instruction.
-
-## Template-Only Work
-
-All work happens in the DarkFact template. Downstream projects receive changes via overlay on Brad's command — never by direct edit from this workspace.
+- **Scratch-First Protocol**: Use `.agent/memory/scratch/` for all high-churn data: research notes, raw tool logs, step-by-step reasoning, and temporary data. Never pollute `.agent/memory/project/` with transient files.
+- **Session Distillation**: Before calling `/wrap-up`, ensure all valuable insights in `scratch/` are distilled into `learned.md` or the final session summary. 
+- **The Purge**: Acknowledge that `.agent/memory/scratch/` is automatically wiped during `/wrap-up`. Use this as a forcing function for clarity.

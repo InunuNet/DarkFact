@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# DarkFact init.sh — Project Scaffolding (v2.0)
+# DarkFact init.sh — Project Scaffolding (v2.1)
 #
 # Pure infrastructure. Interactive onboarding is handled by /onboard workflow.
 #
@@ -31,45 +31,98 @@ detect_platform() {
 
 PLATFORM=$(detect_platform)
 PROJECT_NAME="$(basename "$PWD")"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+TEMPLATE_DIR="$SCRIPT_DIR/template"
 
 # ── Parse flags ───────────────────────────────────────────────────────────────
-for arg in "$@"; do
-    case "$arg" in
-        --name=*) PROJECT_NAME="${arg#*=}" ;;
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --name=*) PROJECT_NAME="${1#*=}"; shift ;;
+        --name)   PROJECT_NAME="$2"; shift 2 ;;
+        *)        shift ;;
     esac
 done
 
+# Sanitize project name
+PROJECT_NAME="$(printf '%s' "$PROJECT_NAME" | tr -cd '[:alnum:]_. -' | head -c 128)"
+
+# ── Preflight checks ──────────────────────────────────────────────────────────
+preflight() {
+    for cmd in python3 git; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            printf "${YELLOW}❌ Required tool '%s' not found in PATH. Install it and re-run.${NC}\n" "$cmd" >&2
+            exit 1
+        fi
+    done
+    if [ ! -f "$TEMPLATE_DIR/.agent/profile.json" ]; then
+        printf "${YELLOW}❌ Template missing at %s/.agent/profile.json${NC}\n" "$TEMPLATE_DIR" >&2
+        printf "   init.sh must be run from within the DarkFact clone directory.\n" >&2
+        exit 1
+    fi
+}
+
+# ── Profile ───────────────────────────────────────────────────────────────────
+write_profile() {
+    printf "${CYAN}📋 Writing project profile...${NC}\n"
+    local template_profile="$TEMPLATE_DIR/.agent/profile.json"
+    local target=".agent/profile.json"
+
+    cp "$template_profile" "$target"
+
+    local created_at
+    created_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || echo "unknown")
+    local template_version
+    template_version=$(cat "$SCRIPT_DIR/.agent/version" 2>/dev/null || echo "unknown")
+
+    python3 - <<PYEOF
+import json
+path = "$target"
+with open(path) as f:
+    p = json.load(f)
+p['project_name']     = "$PROJECT_NAME"
+p['primary_platform'] = "$PLATFORM"
+p['created_at']       = "$created_at"
+p['template_version'] = "$template_version"
+p['onboarding_complete'] = False
+with open(path, 'w') as f:
+    json.dump(p, f, indent=2)
+    f.write('\n')
+PYEOF
+}
+
 # ── Core structure ────────────────────────────────────────────────────────────
 scaffold_core() {
-    echo -e "${CYAN}📂 Scaffolding core structure...${NC}"
+    printf "${CYAN}📂 Scaffolding core structure...${NC}\n"
 
     mkdir -p \
         .agent/agents \
         .agent/identity \
         .agent/memory/scratch \
         .agent/memory/project \
-        .agent/rules \
+        .agent/rules/_core \
+        .agent/rules/claude \
+        .agent/rules/gemini \
         .agent/skills \
         .agent/workflows \
+        .agent/providers \
         .claude/agents \
         .claude/rules \
         .claude/skills \
         .gemini/agents \
         .gemini/skills \
-        execution \
+        .gemini/rules \
+        execution/hooks \
         .tmp
 
-    # Placeholders to keep git-tracked dirs
     touch .agent/memory/scratch/.keep
-    touch .agent/skills/.keep
 
-    # WORKSPACE marker — hard identity file for workspace isolation.
-    # Boot Step 0 reads this to verify the agent is in the right project.
-    # Never delete this file. Never copy it between projects.
-    echo "$PROJECT_NAME" > WORKSPACE
+    # WORKSPACE marker
+    printf '%s\n' "$PROJECT_NAME" > WORKSPACE
 
-    # Fresh project files (don't inherit template's context)
-    cat > .agent/memory/project/goals.md << 'EOF'
+    # ── Copy from template: clean slate (no DarkFact state) ──────────────────
+
+    # Fresh memory files
+    cp "$TEMPLATE_DIR/.agent/memory/project/goals.md"       .agent/memory/project/goals.md       2>/dev/null || cat > .agent/memory/project/goals.md << 'EOF'
 # Goals
 
 ## Mission
@@ -79,107 +132,122 @@ scaffold_core() {
 ## Active Goals
 
 1. Complete onboarding — run `/onboard` to begin
-
-## Success Criteria
-
-- [ ] Project goal defined
-- [ ] Tech stack chosen
-- [ ] Initial backlog created
 EOF
 
-    cat > .agent/memory/project/learned.md << 'EOF'
+    cp "$TEMPLATE_DIR/.agent/memory/project/learned.md"     .agent/memory/project/learned.md     2>/dev/null || cat > .agent/memory/project/learned.md << 'EOF'
 # Learned
 
-_Lessons added by the maintainer agent during session wrap-up._
+## L1: Two-repo Git model
 
-## L1: Two-repo Git model — read this first
+Every DarkFact project uses two Git remotes:
+- `origin` — your project's own GitHub repo
+- `darkfact-upstream` — the DarkFact template (pull only, never push)
 
-Every DarkFact project uses two Git remotes. Both must be set up.
-
-| Remote | Points to | Purpose |
-|--------|-----------|---------|
-| `origin` | `github.com/InunuNet/[THIS PROJECT]` | Your project's code, history, issues |
-| `darkfact-upstream` | `github.com/InunuNet/DarkFact` | Template infrastructure — pull only |
-
-**Rules:**
-- Push your work to `origin` — your project's own GitHub repo
-- Pull template updates via `make update-template` (fetches from `darkfact-upstream`)
-- **Never push to `darkfact-upstream`** — it's the shared template, read-only for you
-- Template bug? Report via `/report-bug` → creates issue on `InunuNet/DarkFact`
-- Project bug? Create issue on your own `origin` repo
-
-Check remotes are correct: `git remote -v`
+Run `git remote -v` to verify both are set.
 EOF
 
-    cat > .agent/memory/project/backlog.md << 'EOF'
+    cp "$TEMPLATE_DIR/.agent/memory/project/backlog.md"     .agent/memory/project/backlog.md     2>/dev/null || cat > .agent/memory/project/backlog.md << 'EOF'
 # Backlog
 
 ## TODO
 
 - [ ] Run `/onboard` to define project goal and tech stack
-
-## DONE
 EOF
+
+    cp "$TEMPLATE_DIR/.agent/memory/project/rules.md"       .agent/memory/project/rules.md
 
     cat > .agent/memory/project/session_log.md << 'EOF'
 # Session Log
 
-Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest when full.
+Rolling log of work sessions. Most recent at top. Max 20 entries.
 
 ---
 
 <!-- SESSIONS -->
 EOF
 
-    : > .agent/memory/project/rules.md
-}
+    # Identity templates (filled in during /onboard)
+    if [ -d "$TEMPLATE_DIR/.agent/identity" ]; then
+        cp "$TEMPLATE_DIR/.agent/identity/"*.md .agent/identity/ 2>/dev/null || true
+    else
+        cat > .agent/identity/soul.md << 'EOF'
+# Soul: Project Assistant
 
-# ── Profile ───────────────────────────────────────────────────────────────────
-write_profile() {
-    echo -e "📋 Writing project profile..."
-    CREATED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || echo "unknown")
-    TEMPLATE_VERSION=$(cat "$(dirname "$0")/.agent/version" 2>/dev/null || echo "1.0.0")
+**Name**: [Set during /onboard]
+**Role**: Primary project coordinator and agent orchestrator
 
-    cat > .agent/profile.json << PROFEOF
-{
-  "project_name": "$PROJECT_NAME",
-  "project_type": "pending",
-  "platform": "$PLATFORM",
-  "template_version": "$TEMPLATE_VERSION",
-  "onboarding_complete": false,
-  "features": {
-    "llm_apis": false,
-    "security_rules": false,
-    "style_guide": false
-  },
-  "created_at": "$CREATED_AT"
-}
-PROFEOF
+Your full persona is defined during /onboard.
+EOF
+        cat > .agent/identity/user.md << 'EOF'
+# User Profile
+
+**Name**: [Set during /onboard]
+**Role**: [Set during /onboard]
+
+Preferences are defined during /onboard.
+EOF
+    fi
+
+    # ── Copy hooks, provider configs, settings ────────────────────────────────
+    cp "$SCRIPT_DIR/.claude/settings.json"  .claude/settings.json  2>/dev/null || true
+    cp "$SCRIPT_DIR/.gemini/settings.json"  .gemini/settings.json  2>/dev/null || true
+
+    # Copy rules (canonical source → platform dirs)
+    for f in "$SCRIPT_DIR/.claude/rules/"*.md; do
+        [ -f "$f" ] && cp "$f" .claude/rules/
+    done
+
+    # Copy hook scripts
+    if [ -d "$SCRIPT_DIR/execution/hooks" ]; then
+        cp "$SCRIPT_DIR/execution/hooks/"*.sh .         2>/dev/null || true
+        cp "$SCRIPT_DIR/execution/hooks/"*.sh execution/hooks/ 2>/dev/null || true
+    fi
+
+    # Copy execution scripts
+    for f in brain.py sync_agents.sh sync_skills.sh sync_rules.sh merge_profile.py; do
+        [ -f "$SCRIPT_DIR/execution/$f" ] && cp "$SCRIPT_DIR/execution/$f" "execution/$f" 2>/dev/null || true
+    done
+
+    # ── Copy canonical agents, skills, workflows from DarkFact ───────────────
+    for f in "$SCRIPT_DIR/.agent/agents/"*.md; do
+        [ -f "$f" ] && cp "$f" .agent/agents/
+    done
+    for f in "$SCRIPT_DIR/.agent/skills/"*.md; do
+        [ -f "$f" ] && cp "$f" .agent/skills/
+    done
+    for f in "$SCRIPT_DIR/.agent/workflows/"*.md; do
+        [ -f "$f" ] && cp "$f" .agent/workflows/
+    done
+
+    # Provider registry
+    for f in "$SCRIPT_DIR/.agent/providers/"*.json; do
+        [ -f "$f" ] && cp "$f" .agent/providers/
+    done
 }
 
 # ── AGENTS.md + symlinks ──────────────────────────────────────────────────────
 setup_instructions() {
-    echo -e "🔗 Setting up instruction symlinks..."
+    printf "🔗 Setting up instruction symlinks...\n"
 
-    # Keep AGENTS.md as the source of truth
-    # CLAUDE.md and GEMINI.md are symlinks
-    if [ ! -f AGENTS.md ]; then
-        cp "$(dirname "$0")/AGENTS.md" AGENTS.md 2>/dev/null || true
+    # Use generic template AGENTS.md (not DarkFact's project-specific one)
+    local agents_src
+    if [ -f "$TEMPLATE_DIR/AGENTS.md" ]; then
+        agents_src="$TEMPLATE_DIR/AGENTS.md"
+    else
+        agents_src="$SCRIPT_DIR/AGENTS.md"
     fi
 
-    # Cross-platform symlink creation
+    cp "$agents_src" AGENTS.md 2>/dev/null || true
+
     rm -f CLAUDE.md GEMINI.md 2>/dev/null || true
-    ln -sf AGENTS.md CLAUDE.md 2>/dev/null || \
-        cp AGENTS.md CLAUDE.md 2>/dev/null || true
-    ln -sf AGENTS.md GEMINI.md 2>/dev/null || \
-        cp AGENTS.md GEMINI.md 2>/dev/null || true
+    ln -sf AGENTS.md CLAUDE.md 2>/dev/null || cp AGENTS.md CLAUDE.md 2>/dev/null || true
+    ln -sf AGENTS.md GEMINI.md 2>/dev/null || cp AGENTS.md GEMINI.md 2>/dev/null || true
 }
 
 # ── Gitignore ─────────────────────────────────────────────────────────────────
 setup_gitignore() {
-    if [ ! -f .gitignore ]; then
-        echo -e "🙈 Creating .gitignore..."
-        cat > .gitignore << 'EOF'
+    [ -f .gitignore ] && return
+    cat > .gitignore << 'EOF'
 # OS
 .DS_Store
 Thumbs.db
@@ -194,33 +262,23 @@ __pycache__/
 .env
 .env.enc
 
-# Agent scratch (session temp, not committed)
+# Agent scratch
 .agent/memory/scratch/*
 !.agent/memory/scratch/.keep
 
-# Brain (project-local, large)
+# Brain (local, large)
 .agent/memory/brain/
 EOF
-    fi
 }
 
-# ── Secrets (optional, macOS/Linux only) ──────────────────────────────────────
+# ── Secrets (optional) ────────────────────────────────────────────────────────
 setup_secrets() {
-    if [ "$PLATFORM" = "windows" ]; then
-        printf "${YELLOW}   ⚠️  sops/age: install WSL for secrets support.${NC}\n"
-        return
-    fi
-
-    if ! command -v sops >/dev/null 2>&1 || ! command -v age >/dev/null 2>&1; then
-        printf "${DIM}   ⚠️  sops/age not installed. Run: brew install sops age${NC}\n"
-        return
-    fi
+    [ "$PLATFORM" = "windows" ] && return
+    command -v sops >/dev/null 2>&1 && command -v age >/dev/null 2>&1 || return
 
     if [ ! -f .sops.yaml ]; then
         mkdir -p "$HOME/.config/sops/age"
-        if [ ! -f "$HOME/.config/sops/age/keys.txt" ]; then
-            age-keygen -o "$HOME/.config/sops/age/keys.txt" 2>/dev/null
-        fi
+        [ -f "$HOME/.config/sops/age/keys.txt" ] || age-keygen -o "$HOME/.config/sops/age/keys.txt" 2>/dev/null
         PUB_KEY=$(grep "public key:" "$HOME/.config/sops/age/keys.txt" | awk '{print $4}')
         cat > .sops.yaml << SOPSEOF
 creation_rules:
@@ -229,64 +287,56 @@ creation_rules:
     - age:
       - $PUB_KEY
 SOPSEOF
-        echo -e "   🔐 sops + age configured"
+        printf "   🔐 sops + age configured\n"
     fi
 }
 
 # ── Git init ──────────────────────────────────────────────────────────────────
 setup_git() {
     if [ ! -d .git ]; then
-        echo -e "🗂️  Initialising git repository..."
+        printf "🗂️  Initialising git repository...\n"
         git init -q
+    fi
+    git remote get-url darkfact-upstream >/dev/null 2>&1 || \
         git remote add darkfact-upstream https://github.com/InunuNet/DarkFact.git 2>/dev/null || true
-    else
-        # Already has git — ensure upstream remote exists
-        git remote get-url darkfact-upstream >/dev/null 2>&1 || \
-            git remote add darkfact-upstream https://github.com/InunuNet/DarkFact.git 2>/dev/null || true
+
+    if ! git remote get-url origin >/dev/null 2>&1; then
+        printf "${YELLOW}   ⚠️  No 'origin' remote. Add it:${NC}\n"
+        printf "      git remote add origin https://github.com/InunuNet/%s.git\n" "$PROJECT_NAME"
     fi
 }
 
-# ── Sync agents ───────────────────────────────────────────────────────────────
-sync_agents() {
-    if [ -f execution/sync_agents.sh ]; then
-        echo -e "🤖 Syncing agents..."
-        bash execution/sync_agents.sh
+# ── Sync agents + skills ──────────────────────────────────────────────────────
+sync_all() {
+    [ -f execution/sync_agents.sh ] && bash execution/sync_agents.sh
+    [ -f execution/sync_skills.sh ] && bash execution/sync_skills.sh
+    # sync_rules only if canonical source exists
+    if [ -f execution/sync_rules.sh ] && [ -d .agent/rules/_core ]; then
+        bash execution/sync_rules.sh 2>/dev/null || true
     fi
-}
-
-# ── Sync skills ──────────────────────────────────────────────────────────────
-sync_skills() {
-    echo -e "📋 Syncing skills..."
-    for dest in .claude/skills .gemini/skills; do
-        mkdir -p "$dest"
-        for skill in .agent/skills/*.md; do
-            [ -f "$skill" ] && cp "$skill" "$dest/"
-        done
-    done
 }
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 main() {
-    echo ""
-    echo -e "${CYAN}🏭 DarkFact v$(cat .agent/version 2>/dev/null || echo '1.0.0') — Project Bootstrap${NC}"
-    echo -e "${DIM}   Platform: $PLATFORM | Project: $PROJECT_NAME${NC}"
-    echo ""
+    local version
+    version=$(cat "$SCRIPT_DIR/.agent/version" 2>/dev/null || echo "?")
 
+    printf "\n"
+    printf "${CYAN}🏭 DarkFact v%s — Project Bootstrap${NC}\n" "$version"
+    printf "${DIM}   Platform: %s | Project: %s${NC}\n\n" "$PLATFORM" "$PROJECT_NAME"
+
+    preflight
     scaffold_core
     write_profile
     setup_instructions
     setup_gitignore
     setup_secrets
     setup_git
-    sync_agents
-    sync_skills
+    sync_all
 
-    echo ""
-    echo -e "${GREEN}✅ Workspace scaffolded.${NC}"
-    echo ""
-    echo -e "   Next: Run ${CYAN}/onboard${NC} in your AI agent to define your project."
-    echo -e "   Or:   ${CYAN}make help${NC} to see available commands."
-    echo ""
+    printf "\n${GREEN}✅ Workspace scaffolded: %s${NC}\n\n" "$PROJECT_NAME"
+    printf "   Next: Open in Claude Code or Gemini CLI and run ${CYAN}/onboard${NC}\n"
+    printf "   Or:   ${CYAN}make help${NC}\n\n"
 }
 
 main "$@"

@@ -1,3 +1,15 @@
+## [2.2.0] — 2026-04-18
+
+### Added
+- **Autonomy Policy**: .gemini/policies/autonomy.toml explicitly allows engineering tools in Gemini CLI.
+- **Scratch-First Protocol**: Mandatory tiering instruction for all 8 agents to use .agent/memory/scratch/.
+- **Golden Rule**: Framework must use its own system to work on itself (added to AGENTS.md).
+
+### Fixed
+- **Missing Agents**: lead, maintainer, docs, and designer are now correctly identified in boot context and status summaries.
+- **Gemini Tool Mapping**: Fixed sync_agents.sh to use correct Gemini tool names (google_search, write_file, etc.) and fixed comma parsing.
+- **Framework Grounding**: Enhanced full_boot.sh and provider settings to ensure agents understand the DarkFact workspace context immediately.
+
 # DarkFact Changelog
 
 ## [2.0.0] — 2026-04-16

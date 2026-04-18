@@ -1,6 +1,6 @@
 # DarkFact v2.0.0 Makefile
 
-.PHONY: help sync sync-agents sync-skills brain-export brain-import brain-stats commit audit test update-template onboard check-feedback
+.PHONY: help sync sync-agents sync-skills sync-rules migrate-rules brain-export brain-import brain-stats commit audit test test-init update-template onboard check-feedback
 
 help:
 	@echo "🏭 DarkFact v2.0.0"
@@ -9,9 +9,10 @@ help:
 	@echo "  make onboard           Start AI-guided project onboarding"
 	@echo ""
 	@echo "  Agents + Skills"
-	@echo "  make sync              Sync agents + skills → Claude + Gemini"
+	@echo "  make sync              Sync agents, skills, and rules → Claude + Gemini"
 	@echo "  make sync-agents       Sync canonical agents → Claude + Gemini"
 	@echo "  make sync-skills       Sync canonical skills → Claude + Gemini"
+	@echo "  make sync-rules        Sync canonical rules → Claude + Gemini"
 	@echo ""
 	@echo "  Memory / Brain"
 	@echo "  make brain-export      Export brain memories to JSON"
@@ -30,12 +31,48 @@ help:
 sync:
 	@bash execution/sync_agents.sh
 	@bash execution/sync_skills.sh
+	@bash execution/sync_rules.sh
 
 sync-agents:
 	@bash execution/sync_agents.sh
 
 sync-skills:
 	@bash execution/sync_skills.sh
+
+sync-rules:
+	@bash execution/sync_rules.sh
+
+migrate-rules:
+	@echo "Migrating rules to canonical .agent/rules/ structure..."
+	@mkdir -p .agent/rules/_core .agent/rules/claude .agent/rules/gemini
+	@[ -f .claude/rules/scope.md ]    && cp .claude/rules/scope.md    .agent/rules/_core/scope.md    || true
+	@[ -f .claude/rules/security.md ] && cp .claude/rules/security.md .agent/rules/_core/security.md || true
+	@[ -f .claude/rules/hooks.md ]    && cp .claude/rules/hooks.md    .agent/rules/claude/hooks.md   || true
+	@[ -f .claude/rules/memory.md ]   && cp .claude/rules/memory.md   .agent/rules/claude/memory.md  || true
+	@echo "✅ Rules migrated. Now run: make sync-rules"
+
+test-init:
+	@echo "🧪 Running init.sh smoke test..."
+	@TMPDIR=$$(mktemp -d); \
+	cd "$$TMPDIR" && bash $(CURDIR)/init.sh --name=smoketest 2>&1; \
+	echo ""; \
+	echo "Checking artifacts:"; \
+	[ -f WORKSPACE ]                  && echo "  ✅ WORKSPACE"           || echo "  ❌ WORKSPACE missing"; \
+	[ -f .agent/profile.json ]        && echo "  ✅ profile.json"        || echo "  ❌ profile.json missing"; \
+	[ -f .claude/settings.json ]      && echo "  ✅ .claude/settings.json" || echo "  ❌ hooks missing"; \
+	[ -f AGENTS.md ]                  && echo "  ✅ AGENTS.md"           || echo "  ❌ AGENTS.md missing"; \
+	[ -f CLAUDE.md ]                  && echo "  ✅ CLAUDE.md symlink"   || echo "  ❌ CLAUDE.md missing"; \
+	ls .claude/skills/*.md >/dev/null 2>&1 && echo "  ✅ skills present"  || echo "  ❌ .claude/skills empty"; \
+	ls .claude/agents/*.md >/dev/null 2>&1 && echo "  ✅ agents present"  || echo "  ❌ .claude/agents empty"; \
+	python3 -c "import json; p=json.load(open('.agent/profile.json')); \
+		assert 'features' in p, 'features key missing'; \
+		assert p.get('onboarding_complete')==False, 'onboarding_complete should be False'; \
+		assert p.get('project_name')=='smoketest', 'project_name wrong'; \
+		print('  ✅ profile.json schema correct')" 2>&1 || echo "  ❌ profile.json schema wrong"; \
+	grep -q "Vex\|DarkFact coordinator" AGENTS.md 2>/dev/null && echo "  ❌ AGENTS.md poisoned with DarkFact identity" || echo "  ✅ AGENTS.md clean"; \
+	rm -rf "$$TMPDIR"; \
+	echo ""; \
+	echo "✅ Smoke test complete."
 
 brain-export:
 	@python3 execution/brain.py export

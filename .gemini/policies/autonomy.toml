@@ -1,0 +1,43 @@
+# DarkFact Autonomy Policy
+# Grants explicit permission for agentic tools within this workspace.
+
+[[rule]]
+name = "Allow core engineering tools"
+toolName = ["write_file", "replace", "read_file", "list_directory", "glob", "grep_search", "web_fetch"]
+decision = "allow"
+priority = 500
+
+[[rule]]
+name = "Allow trusted execution scripts"
+toolName = ["run_shell_command"]
+# Allow common DarkFact execution patterns
+commandPrefix = [
+  "python3 execution/",
+  "bash execution/",
+  "python3 -c",
+  "bash init.sh",
+  "make ",
+  "git status",
+  "git diff",
+  "git log",
+  "ls ",
+  "cat ",
+  "mkdir -p",
+  "rm -f .agent/memory/scratch/"
+]
+decision = "allow"
+priority = 400
+
+[[rule]]
+name = "Protect sensitive system paths"
+toolName = ["read_file", "write_file", "replace", "run_shell_command"]
+# Deny access to credentials or system config outside the workspace
+pathPattern = [
+  "~/.ssh/*",
+  "~/.aws/*",
+  "~/.gnupg/*",
+  "/etc/*",
+  "~/.gemini/credentials/*"
+]
+decision = "deny"
+priority = 1000

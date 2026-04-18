@@ -1,0 +1,42 @@
+{
+  "name": "gemini-cli",
+  "display": "Gemini CLI",
+  "config_dir": ".gemini",
+  "agents_dir": ".gemini/agents",
+  "skills_dir": ".gemini/skills",
+  "rules_dir": ".gemini/rules",
+  "instructions_file": "GEMINI.md",
+  "settings_file": ".gemini/settings.json",
+  "supports_hooks": true,
+  "supports_rules": true,
+  "supports_dir_symlinks": true,
+  "hook_types": ["command"],
+  "hook_events": ["SessionStart", "SessionEnd"],
+  "models": {
+    "pro":   { "id": "gemini-2.5-pro",        "context_window": 1000000, "tier": "best" },
+    "flash": { "id": "gemini-2.5-flash",       "context_window": 1000000, "tier": "balanced" },
+    "local": { "id": "gemini-2.5-flash-lite",  "context_window": 1000000, "tier": "fast" }
+  },
+  "tool_map": {
+    "read":   "read_file",
+    "write":  "write_file",
+    "edit":   "replace",
+    "shell":  "run_shell_command",
+    "grep":   "grep_search",
+    "glob":   "list_directory",
+    "search": "google_web_search",
+    "web":    "web_fetch"
+  },
+  "session": {
+    "optimal_budget_tokens": 800000,
+    "compact_threshold": 0.9,
+    "max_session_turns": 500
+  },
+  "memory_paths": {
+    "project": ".agent/memory/project/",
+    "scratch": ".agent/memory/scratch/",
+    "brain":   ".agent/memory/brain/"
+  },
+  "headless": "gemini -p \"PROMPT\"",
+  "resume": "gemini -c"
+}
