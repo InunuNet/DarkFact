@@ -3,7 +3,7 @@
 
 [[rule]]
 name = "Allow core engineering tools"
-toolName = ["write_file", "replace", "read_file", "list_directory", "glob", "grep_search", "web_fetch"]
+toolName = ["write_file", "replace", "read_file", "list_directory", "glob", "grep_search", "web_fetch", "architect", "dev", "analyst", "maintainer", "designer", "qa", "lead", "docs"]
 decision = "allow"
 priority = 500
 

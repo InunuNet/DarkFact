@@ -208,3 +208,21 @@ The Gemini CLI provider uses `google_web_search` for its integrated search capab
 DarkFact projects update via `make update-template`. This uses the `gh` CLI to download the latest infrastructure from GitHub directly. No `darkfact-upstream` git remote is required. This replaces the old two-repo Git model which was complex and error-prone for users.
 
 **Rule**: Use `make update-template` for all upstream synchronization. Do not manually pull from or add a `darkfact-upstream` remote.
+
+## L35: Sub-agent delegation requires explicit autonomy policies (2026-04-18)
+
+When delegating to sub-agents (@dev, @architect, etc.), the Gemini CLI provider treats these as tool calls. If they are not explicitly listed in `.gemini/policies/autonomy.toml`, the user is bombarded with permission prompts for every delegation.
+
+**Rule**: All 8 canonical sub-agent tools must be in the `allow` list of the project's autonomy policy.
+
+## L36: SubagentStart/Stop hooks for context injection (2026-04-18)
+
+DarkFact v2.2.1 implements `SubagentStart` and `SubagentStop` hooks. These allow the template to inject project-specific context (rules, recent learnings) into sub-agent prompts and record sub-agent outcomes back to the brain.
+
+**Rule**: Ensure `SubagentStart` and `SubagentStop` are registered in `.gemini/settings.json` and `.claude/settings.json` for all projects.
+
+## L37: onboarding_complete stub prevents infrastructure loss (2026-04-18)
+
+Early versions of `init.sh` did not include project-specific fields in the template `profile.json`. When agents updated these during `/onboard`, they often overwrote the entire file, deleting critical infrastructure config (memory paths, agent lists).
+
+**Rule**: Always include stubs for `project_name`, `project_type`, `soul_type`, `tech_stack`, and `onboarding_complete` (set to `false`) in the template `profile.json`. Agents must update only these stubs.

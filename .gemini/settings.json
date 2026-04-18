@@ -11,6 +11,18 @@
         "type": "command",
         "command": "echo '\\n💾 Wrap up: python3 execution/brain.py wrap-up -s \"summary\" -t \"tags\"'"
       }
+    ],
+    "SubagentStart": [
+      {
+        "type": "command",
+        "command": "bash execution/hooks/subagent_start.sh"
+      }
+    ],
+    "SubagentStop": [
+      {
+        "type": "command",
+        "command": "bash execution/hooks/subagent_stop.sh"
+      }
     ]
   },
   "general": {

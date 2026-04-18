@@ -3,13 +3,13 @@
 ## Phase 1: Core Harness Hardening
 - [ ] Fix PreToolUse guards (In Progress) to correctly parse stdin JSON.
 - [ ] Implement PreCompact hook for state persistence.
-- [ ] Wire SubagentStart/Stop hooks for context injection.
+- [x] Wire SubagentStart/Stop hooks for context injection.
 - [ ] Move security denylists to `settings.json` permissions.
+- [x] Optimize `make update-template` to pull from GitHub via `gh`.
 
 ## Phase 2: Self-Improvement Loop
-- [ ] Finalize Pain Point Monitor (`scan-blockers` integration).
+- [x] Finalize Pain Point Monitor (`scan-blockers` integration).
 - [ ] Implement `gh`-based version checking on boot.
-- [ ] Optimize `make update-template` to pull from GitHub.
 
 ## Phase 3: Parity & Documentation
 - [ ] Audit Gemini CLI for feature gaps vs Claude Code.

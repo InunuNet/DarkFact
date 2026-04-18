@@ -95,7 +95,11 @@ echo ""
 
 # Step 6: Recurring blockers (exits 1 when blockers found, 0 when none)
 echo "--- BLOCKERS ---"
-python3 execution/brain.py scan-blockers 2>/dev/null
+if ! python3 execution/brain.py scan-blockers 2>/dev/null; then
+  echo "No recurring blockers detected."
+else
+  echo "⚠️  Recurring blockers detected! Run /pain-point-monitor for root cause analysis."
+fi
 echo ""
 
 # Step 7: Git remotes
