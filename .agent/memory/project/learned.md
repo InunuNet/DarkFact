@@ -232,3 +232,15 @@ Early versions of `init.sh` did not include project-specific fields in the templ
 In `.gemini/policies/*.toml`, when a rule uses `commandPrefix` or `commandRegex`, the `toolName` field MUST be a single string `"run_shell_command"`, not an array `["run_shell_command"]`. Using an array causes a "Invalid shell command syntax" schema error.
 
 **Rule**: Always use `toolName = "run_shell_command"` (string) in rules that restrict shell commands by prefix or regex.
+
+## L39: Gemini CLI requires explicit "prompt" hook for auto-boot (2026-04-18)
+
+While Claude Code automatically triggers on `type: "command"` hooks at session start, Gemini CLI requires an explicit `type: "prompt"` hook to reliably trigger a response on boot. The command hook runs, but without the prompt hook, the agent may not acknowledge the injected context.
+
+**Rule**: Always provide both a `command` hook (for data injection) and a `prompt` hook (for agent acknowledgement) in `.gemini/settings.json`.
+
+## L40: Backlog updates depend on standard checkbox format (2026-04-18)
+
+Automated wrap-up instructions and agent reasoning for tracking progress rely on the standard Markdown `[ ]` and `[x]` checkbox syntax. Using tables, plain bullets, or other structures for task lists leads to missed updates and state drift in `backlog.md`.
+
+**Rule**: Always use standard checkboxes for task lists in `backlog.md`.

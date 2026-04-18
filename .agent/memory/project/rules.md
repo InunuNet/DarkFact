@@ -10,3 +10,7 @@
 - **Scratch-First Protocol**: Use `.agent/memory/scratch/` for all high-churn data: research notes, raw tool logs, step-by-step reasoning, and temporary data. Never pollute `.agent/memory/project/` with transient files.
 - **Session Distillation**: Before calling `/wrap-up`, ensure all valuable insights in `scratch/` are distilled into `learned.md` or the final session summary. 
 - **The Purge**: Acknowledge that `.agent/memory/scratch/` is automatically wiped during `/wrap-up`. Use this as a forcing function for clarity.
+
+## Documentation Standards
+
+- **Backlog Integrity**: All backlog items in `backlog.md` must use the standard Markdown checkbox format: `[ ]` for open tasks and `[x]` for completed tasks. Do not use plain bullet points, tables, or numbered lists without checkboxes, as this breaks the automated wrap-up and audit workflows.

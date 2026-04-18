@@ -4,6 +4,10 @@
       {
         "type": "command",
         "command": "bash execution/hooks/full_boot.sh && echo '\\n🤖 DARKFACT FRAMEWORK: You are an autonomous agent team. Read the injected BOOT CONTEXT above. You have 8 roles (@lead, @dev, etc.). Your mission is project self-improvement. Run /boot for full reload.'"
+      },
+      {
+        "type": "prompt",
+        "prompt": "Read the context provided by the boot hook and acknowledge the DarkFact mission. Run /boot if you need to refresh your understanding of the project goals."
       }
     ],
     "SessionEnd": [
