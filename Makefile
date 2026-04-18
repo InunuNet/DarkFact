@@ -1,9 +1,9 @@
-# DarkFact v2.0.0 Makefile
+# DarkFact v2.2.2 Makefile
 
 .PHONY: help sync sync-agents sync-skills sync-rules migrate-rules brain-export brain-import brain-stats commit audit test test-init update-template onboard check-feedback
 
 help:
-	@echo "🏭 DarkFact v2.0.0"
+	@echo "🏭 DarkFact v2.2.2"
 	@echo ""
 	@echo "  Project Setup"
 	@echo "  make onboard           Start AI-guided project onboarding"
@@ -104,11 +104,12 @@ update-template:
 	@if [ -f ".agent/profile.json" ] && python3 -c "import json,sys; p=json.load(open('.agent/profile.json')); sys.exit(0 if p.get('project_name')=='DarkFact' else 1)" 2>/dev/null; then \
 		echo "❌ ABORT: You are inside the DarkFact template repo."; \
 		echo "   This command is for downstream projects only."; \
-		echo "   To update DarkFact itself: git add . && git commit && git push"; \
 		exit 1; \
 	fi
 	@which gh >/dev/null 2>&1 || { echo "❌ gh CLI not found. Run: brew install gh && gh auth login"; exit 1; }
 	@gh auth status >/dev/null 2>&1 || { echo "❌ gh not authenticated. Run: gh auth login"; exit 1; }
+	@echo "🔄 Initialising update checkpoint..."
+	@python3 -c "import json, datetime; s={'workflow':'update-template','status':'started','started':datetime.datetime.utcnow().isoformat()}; open('.agent/memory/scratch/checkpoint_update_start.json','w').write(json.dumps(s))"
 	@echo "🔄 Downloading DarkFact template from GitHub..."
 	@TMPDIR=$$(mktemp -d); \
 	gh api repos/InunuNet/DarkFact/tarball/main > "$$TMPDIR/darkfact.tar.gz" 2>/dev/null || \
@@ -131,10 +132,12 @@ update-template:
 	rsync -a --delete "$$TMPDIR/src/.claude/skills/"    .claude/skills/ 2>/dev/null || true; \
 	rsync -a --delete "$$TMPDIR/src/.gemini/skills/"    .gemini/skills/ 2>/dev/null || true; \
 	cp "$$TMPDIR/src/.claude/settings.json"             .claude/settings.json 2>/dev/null || true; \
+	cp "$$TMPDIR/src/.gemini/settings.json"             .gemini/settings.json 2>/dev/null || true; \
 	cp "$$TMPDIR/src/AGENTS.md"                         AGENTS.md 2>/dev/null || true; \
 	cp "$$TMPDIR/src/execution/brain.py"                execution/brain.py 2>/dev/null || true; \
 	cp "$$TMPDIR/src/execution/sync_agents.sh"          execution/sync_agents.sh 2>/dev/null || true; \
 	cp "$$TMPDIR/src/execution/sync_skills.sh"          execution/sync_skills.sh 2>/dev/null || true; \
+	cp "$$TMPDIR/src/execution/sync_rules.sh"           execution/sync_rules.sh 2>/dev/null || true; \
 	cp "$$TMPDIR/src/execution/overlay_template.sh"     execution/overlay_template.sh 2>/dev/null || true; \
 	cp "$$TMPDIR/src/.agent/version"                    .agent/version 2>/dev/null || true; \
 	cp "$$TMPDIR/src/.agent/CHANGELOG.md"               .agent/CHANGELOG.md 2>/dev/null || true; \
@@ -142,7 +145,9 @@ update-template:
 	@echo "🔄 Syncing agents + skills..."
 	@bash execution/sync_agents.sh
 	@bash execution/sync_skills.sh
+	@bash execution/sync_rules.sh
 	@NEW_VER=$$(cat .agent/version 2>/dev/null || echo "?"); \
+	python3 -c "import json, datetime; s={'workflow':'update-template','status':'complete','version':'$$NEW_VER','finished':datetime.datetime.utcnow().isoformat()}; open('.agent/memory/scratch/checkpoint_update_complete.json','w').write(json.dumps(s))"; \
 	echo ""; \
 	echo "✅ Updated to DarkFact v$$NEW_VER"; \
 	echo "   Review changes: git diff"; \

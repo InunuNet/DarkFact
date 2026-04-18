@@ -233,6 +233,12 @@ In `.gemini/policies/*.toml`, when a rule uses `commandPrefix` or `commandRegex`
 
 **Rule**: Always use `toolName = "run_shell_command"` (string) in rules that restrict shell commands by prefix or regex.
 
+## L39: Project Identity — Transitioning to Athanor (2026-04-18)
+
+Naming research was conducted to move away from the "DarkFact" placeholder. The name **Athanor** (the alchemical "undying furnace") was selected for its unique metaphorical alignment with the project's goal of sustained, autonomous evolution and its professional, evocative sound. The transition is planned for a future major release (v3.0.0).
+
+**Rule**: Use "Athanor" as the conceptual identity for future development, while maintaining "DarkFact" for current 2.x infrastructure stability.
+
 ## L39: Gemini CLI requires explicit "prompt" hook for auto-boot (2026-04-18)
 
 While Claude Code automatically triggers on `type: "command"` hooks at session start, Gemini CLI requires an explicit `type: "prompt"` hook to reliably trigger a response on boot. The command hook runs, but without the prompt hook, the agent may not acknowledge the injected context.
