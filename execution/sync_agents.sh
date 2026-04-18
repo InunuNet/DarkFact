@@ -47,7 +47,7 @@ map_gemini_tool() {
     edit) echo "replace" ;;
     shell) echo "run_shell_command" ;;
     grep) echo "grep_search" ;;
-    search) echo "google_search" ;;
+    search) echo "google_web_search" ;;
     web) echo "web_fetch" ;;
     *) echo "$1" ;;
   esac

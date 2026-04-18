@@ -111,6 +111,7 @@ scaffold_core() {
         .gemini/agents \
         .gemini/skills \
         .gemini/rules \
+        .gemini/policies \
         execution/hooks \
         .tmp
 
@@ -191,6 +192,7 @@ EOF
     # ── Copy hooks, provider configs, settings ────────────────────────────────
     cp "$SCRIPT_DIR/.claude/settings.json"  .claude/settings.json  2>/dev/null || true
     cp "$SCRIPT_DIR/.gemini/settings.json"  .gemini/settings.json  2>/dev/null || true
+    cp "$SCRIPT_DIR/.gemini/policies/autonomy.toml" .gemini/policies/autonomy.toml 2>/dev/null || true
 
     # Copy rules (canonical source → platform dirs)
     for f in "$SCRIPT_DIR/.claude/rules/"*.md; do

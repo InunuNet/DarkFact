@@ -1,7 +1,7 @@
 # Backlog
 
 ## Phase 1: Core Harness Hardening
-- [ ] Fix PreToolUse guards to correctly parse stdin JSON.
+- [ ] Fix PreToolUse guards (In Progress) to correctly parse stdin JSON.
 - [ ] Implement PreCompact hook for state persistence.
 - [ ] Wire SubagentStart/Stop hooks for context injection.
 - [ ] Move security denylists to `settings.json` permissions.

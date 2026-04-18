@@ -178,3 +178,27 @@ DarkFact must use `major.minor.patch` versioning:
 
 **v1.1.1 was skipped** — bug fixes landed in v1.2.0 without a patch tag. Don't repeat. Tag every release immediately after pushing. Use `git tag vX.Y.Z && git push origin vX.Y.Z`.
 {"timestamp":"2026-04-17T23:15:00+00:00","effort_level":"comprehensive","task_description":"comprehensive audit and fix plan for darkfact template","criteria_count":80,"criteria_passed":80,"criteria_failed":0,"prd_id":"20260417-202300_darkfact-template-comprehensive-fix","implied_sentiment":7,"reflection_q1":"Running 7 parallel agents on non-overlapping scopes gave complete coverage with zero redundancy — this is the right pattern for comprehensive audits","reflection_q2":"A smarter algorithm would have run make test-init first as a canary — the smoke test failure would have immediately surfaced the function-order bug without needing deep analysis","reflection_q3":"Thinking/FirstPrinciples skill would have helped frame the provider-agnosticism mission earlier; Research skill was partially used via analyst subagents","within_budget":true}
+
+## L30: Scratch-First Memory Tiering (2026-04-18)
+
+Agents were polluting persistent project memory with high-churn research and logs. The fix was adding a mandatory rule to all agent souls to use `.agent/memory/scratch/` for transient work.
+
+**Rule**: All agents must use `scratch/` for high-churn data, which is automatically purged during wrap-up.
+
+## L31: Gemini CLI Policy-Based Autonomy (2026-04-18)
+
+Interactive Gemini CLI sessions were stalling on file edits due to default permission guards. Setting `approval-mode yolo` is a partial fix, but defining a workspace-local `.gemini/policies/autonomy.toml` is the robust solution for long-term autonomy.
+
+**Rule**: Always define a workspace-local autonomy policy in `.gemini/policies/autonomy.toml` to trust core engineering tools.
+
+## L32: Gemini CLI policy priority must be <= 999 (2026-04-18)
+
+Gemini CLI policy engine uses priority tiers. Setting a priority of 1000 or higher causes a schema validation error ("priority must be <= 999 to prevent tier overflow"). This prevents the policy file from loading, defaulting the agent to interactive mode (blocking autonomy).
+
+**Rule**: All policy rules in `.gemini/policies/*.toml` must have a priority between 0 and 999. Use 999 for the highest priority (e.g. deny-all overrides).
+
+## L33: Gemini CLI tool name for web search is `google_web_search` (2026-04-18)
+
+The Gemini CLI provider uses `google_web_search` for its integrated search capability. Using `google_search` or other variants in agent `tools:` definitions causes a "Validation failed: Agent Definition: tools.N: Invalid tool name" error at load time.
+
+**Rule**: Always map canonical `search` tool to `google_web_search` for Gemini CLI. Ensure `sync_agents.sh` maintains this mapping.

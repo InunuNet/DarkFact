@@ -40,4 +40,4 @@ pathPattern = [
   "~/.gemini/credentials/*"
 ]
 decision = "deny"
-priority = 1000
+priority = 999
