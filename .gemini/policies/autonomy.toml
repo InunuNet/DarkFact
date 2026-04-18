@@ -9,7 +9,7 @@ priority = 500
 
 [[rule]]
 name = "Allow trusted execution scripts"
-toolName = ["run_shell_command"]
+toolName = "run_shell_command"
 # Allow common DarkFact execution patterns
 commandPrefix = [
   "python3 execution/",

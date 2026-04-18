@@ -226,3 +226,9 @@ DarkFact v2.2.1 implements `SubagentStart` and `SubagentStop` hooks. These allow
 Early versions of `init.sh` did not include project-specific fields in the template `profile.json`. When agents updated these during `/onboard`, they often overwrote the entire file, deleting critical infrastructure config (memory paths, agent lists).
 
 **Rule**: Always include stubs for `project_name`, `project_type`, `soul_type`, `tech_stack`, and `onboarding_complete` (set to `false`) in the template `profile.json`. Agents must update only these stubs.
+
+## L38: Gemini CLI toolName must be a string for shell command rules (2026-04-18)
+
+In `.gemini/policies/*.toml`, when a rule uses `commandPrefix` or `commandRegex`, the `toolName` field MUST be a single string `"run_shell_command"`, not an array `["run_shell_command"]`. Using an array causes a "Invalid shell command syntax" schema error.
+
+**Rule**: Always use `toolName = "run_shell_command"` (string) in rules that restrict shell commands by prefix or regex.
