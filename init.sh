@@ -136,16 +136,15 @@ scaffold_core() {
 EOF
 
     cp "$TEMPLATE_DIR/.agent/memory/project/learned.md"     .agent/memory/project/learned.md     2>/dev/null || cat > .agent/memory/project/learned.md << 'EOF'
-# Learned
+    # Learned
 
-## L1: Two-repo Git model
+    ## L1: GitHub-first Template Updates
 
-Every DarkFact project uses two Git remotes:
-- `origin` — your project's own GitHub repo
-- `darkfact-upstream` — the DarkFact template (pull only, never push)
+    DarkFact projects update via 'make update-template'. This uses the 'gh' CLI to download the latest infrastructure from GitHub directly. No 'darkfact-upstream' git remote is required.
 
-Run `git remote -v` to verify both are set.
-EOF
+    Run 'gh auth status' to ensure you are logged in.
+    EOF
+
 
     cp "$TEMPLATE_DIR/.agent/memory/project/backlog.md"     .agent/memory/project/backlog.md     2>/dev/null || cat > .agent/memory/project/backlog.md << 'EOF'
 # Backlog
@@ -299,8 +298,6 @@ setup_git() {
         printf "🗂️  Initialising git repository...\n"
         git init -q
     fi
-    git remote get-url darkfact-upstream >/dev/null 2>&1 || \
-        git remote add darkfact-upstream https://github.com/InunuNet/DarkFact.git 2>/dev/null || true
 
     if ! git remote get-url origin >/dev/null 2>&1; then
         printf "${YELLOW}   ⚠️  No 'origin' remote. Add it:${NC}\n"

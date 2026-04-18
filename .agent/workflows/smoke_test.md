@@ -34,7 +34,7 @@ darkfact
 - [ ] profile.json identity check passes
 - [ ] brain last-session runs (returns "no sessions yet" on fresh project — acceptable)
 - [ ] goals.md, learned.md, backlog.md read without error
-- [ ] git remotes check shows `darkfact-upstream`
+- [ ] `gh auth status` returns 0
 - [ ] Status report printed with correct project name
 
 **Per provider:**

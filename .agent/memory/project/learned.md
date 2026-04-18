@@ -202,3 +202,9 @@ Gemini CLI policy engine uses priority tiers. Setting a priority of 1000 or high
 The Gemini CLI provider uses `google_web_search` for its integrated search capability. Using `google_search` or other variants in agent `tools:` definitions causes a "Validation failed: Agent Definition: tools.N: Invalid tool name" error at load time.
 
 **Rule**: Always map canonical `search` tool to `google_web_search` for Gemini CLI. Ensure `sync_agents.sh` maintains this mapping.
+
+## L34: GitHub-first Template Updates (2026-04-18)
+
+DarkFact projects update via `make update-template`. This uses the `gh` CLI to download the latest infrastructure from GitHub directly. No `darkfact-upstream` git remote is required. This replaces the old two-repo Git model which was complex and error-prone for users.
+
+**Rule**: Use `make update-template` for all upstream synchronization. Do not manually pull from or add a `darkfact-upstream` remote.

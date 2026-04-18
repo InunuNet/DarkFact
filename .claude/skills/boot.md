@@ -92,7 +92,7 @@ If no recurring blockers → proceed normally.
 git remote -v
 ```
 
-Every project needs `origin` (your repo) and `darkfact-upstream` (template). Warn if either is missing.
+Every project needs `origin` (your repo). Updates from the template happen via `make update-template` (using `gh` CLI). Warn if `origin` is missing or `gh` is not authenticated.
 
 ### 8. Version check
 

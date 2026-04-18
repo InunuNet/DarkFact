@@ -52,7 +52,4 @@ if [ -d "$TARGET/.agent.bak/memory/brain" ]; then
   echo "  ✅ Brain preserved"
 fi
 
-# Step 4: Add upstream remote (if missing)
-git -C "$TARGET" remote add darkfact-upstream https://github.com/InunuNet/DarkFact.git 2>/dev/null || true
-
 echo "  ✅ Overlay complete: $proj (v$VERSION)"
