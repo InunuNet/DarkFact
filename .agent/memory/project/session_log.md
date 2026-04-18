@@ -1,164 +1,22 @@
 # Session Log
 
-Rolling log of work sessions. Most recent at top. Max 20 entries — drop oldest when full.
+Rolling log of work sessions. Most recent at top. Max 20 entries.
 
 ---
-
-## 2026-04-18 — P0+P1 template fixes: init.sh, hooks, providers, clean-room template
-
-- `init.sh` rewritten: function hoisting fix (write_profile above main), preflight checks, full scaffold from template/
-- `template/` clean-room created: no Vex/DarkFact identity, generic AGENTS.md, full-schema profile.json stub
-- `.agent/providers/` registry created: claude-code.json, gemini-cli.json, opencode.json with baked model constants
-- `execution/sync_rules.sh` fixed: rsync --delete, missing-source guard, no more destroy-on-sync
-- `execution/hooks/verify_workspace.sh`: worktree allowlist, fail-safe profile parse
-- `execution/hooks/subagent_start.sh`: full python3 JSON build, no shell sed escaping
-- `.claude/settings.json`: PreToolUse guards extended to `~/.claude/PAI/*`, stdin piping fixed
-- `.gemini/settings.json`: added `"type": "command"` to all hook entries
-- `.agent/skills/wrap-up.md`: auto-detect blockers via scan-blockers, removed manual placeholder
-- `make test-init` passes all 9 checks ✅
-Commits: 0871f18 chore: wrap-up — session log + brain stored
-
-## 2026-04-17 (Session)
-
-**Focus:** Boot reliability — every session gets full context automatically
-
-**Shipped:**
-- Merged PR #16 with team review fixes: `full_boot.sh` now injects `rules.md` first, caps `learned.md` at 80 lines, moves `brain recall` + `scan-blockers` from prompt into command hook
-- `subagent_start.sh` upgraded: team agents now receive `rules.md` + last 40 lines of `learned.md`
-- `make update-template` replaced git remote approach with `gh api tarball` — no setup needed
-- Added `.claude/rules/scope.md` + CLAUDE.md hard stops: PAI (`~/.claude/PAI/`) is never in scope
-- Fixed #15: removed spurious `Write(~/.claude/settings.json)` ask rule
-
-**Key learning:** The boot prompt hook was never reliable — agents skipped it. Command hooks are the only enforcement mechanism. `rules.md` was the critical missing piece; without it, agents had to be told the scope boundary every session.
-
----
-
-## 2026-04-17 — Alembic integration plan designed
-
-- Identified "LAMBEC" = Alembic project at /Users/vetus/ai/Alembic/ (inunu/alembic on GitHub)
-- Alembic: HTML→Markdown proxy, 5-stage cascade, 84–98% token reduction, already v1.0.0
-- Designed 3-layer integration plan: init.sh install + /web-fetch skill + analyst/architect/lead soul updates
-- No MCP wrapper or HTTP proxy daemon needed — CLI is sufficient
-- No GitHub fork needed — already in inunu org
-- Plan ready to implement next session; goals.md Alembic entry moves from Future → Active P1
-Commits: 19435ee chore: wrap-up — tick v2.1.x backlog items (no new commits this session)
-
-## 2026-04-17 — DarkFact v2.1.x: harness hardening, purification, self-improvement loop
-
-- v2.1.0: full codebase purification — deleted dead files, stale docs, duplicate rules, orphan workflows
-- v2.1.0: fixed memory guards (stdin JSON), stale Stop-hook refs, Makefile version
-- v2.1.1: PreCompact/PostCompact hooks, permissions.deny block in settings.json
-- v2.1.2: SubagentStart/Stop hooks, verify_workspace.sh JSON safety, Pain Point Monitor skill
-- v2.1.2: onboard Step 0 — project name warning before anything else
-- v2.1.3: boot step 8 gh release check, make update-template applies overlay via git checkout
-- Scope boundary rule established: never touch files outside DarkFact without explicit instruction
-- All v2.1.x P0/P1 backlog items closed; fleet pulls updates independently via make update-template
-Commits: eed2919 feat: v2.1.3 | a071c57 feat: v2.1.2 | 4b10ab4 feat: onboard name warning
-
-## 2026-04-16 — Fleet-wide v2.0.0 rollout + overlay hardening
-
-- Merged PR #12 → v2.0.0 on main, closed #8 and #10 manually
-- Fixed #14: overlay_template.sh cp -r → rsync --delete, dynamic TEMPLATE/version, added Makefile+CHANGELOG
-- Fixed Stop hook in PortPulse + Mlilo (same bug as Mumbl AI — settings.json not in overlay)
-- Added .claude/settings.json to overlay so hook drift can't recur across fleet
-- Created overlay_all.sh — batch updater with ignore list, sorts closest-to-current first
-- Ran fleet-wide overlay: 17/17 projects updated to v2.0.0, 0 failures
-- Fleet status: all green, Codi RnI intentionally not onboarded (research project, user will onboard on next use)
-- Workspace Template added to overlay ignore list (legacy original, different versioning)
-Commits: 29cadf2 feat: overlay_all.sh | cb33f4e fix: overlay copies settings.json | c00ce32 fix: rsync --delete
-
-## 2026-04-16 — DarkFact v2.0.0: Claude Code adapter + recurring issue detector
-
-- Fixed #7 (complete Claude adapter), #8 (Stop→SessionEnd), #10 (memory path guards), #13 (spaces in project names)
-- Built recurring issue detector: brain.py scan-blockers with escalation ladder (2x→research, 3x→pivot)
-- Replaced .claude/skills/ symlink with real dir — Claude Code doesn't follow dir symlinks (L22)
-- /simplify caught critical bugs twice: || true swallowing exit 2, unconditional empty blocker storage
-- Closed PR #9 (superseded), opened PR #12 with 6 commits
-- Added 4 lessons (L22–L25), updated backlog with 6 closed items
-Commits: c586993 fix: skills dir symlinks | da2b330 fix: spaces in project names | b731a32 feat: recurring issue detector
-
-## 2026-04-15 — Backlog review, no changes
-
-- Reviewed and presented full backlog to user
-- No commits, no file changes this block
-Commits: d513210 docs: CLAUDE.md + memory updates | 924de0c feat: /wrap-up skill | 7fb1582 feat: designer agent
-
-## 2026-04-15 — Bug triage, awaiting fix approval
-
-- #4 and #5 added to backlog, prioritised above smoke test
-- MumblAI partial impl of #5 noted as reference pattern
-- No commits this block
-Commits: d513210 docs: CLAUDE.md + memory updates | 924de0c feat: /wrap-up skill | 7fb1582 feat: designer agent
-
-## 2026-04-15 — GitHub issues reviewed, two bugs found
-
-- Issue #4: brain.py crash when scratch/ has subdirectory — fix ready to apply
-- Issue #5: MEMORY/LEARNING paths should be project-local not ~/.claude — bigger scope
-- No commits this block
-Commits: d513210 docs: CLAUDE.md + memory updates | 924de0c feat: /wrap-up skill | 7fb1582 feat: designer agent
-
-## 2026-04-15 — /wrap-up skill created (v1.2.13)
-
-- .agent/skills/wrap-up.md created — /wrap-up now works as slash command
-- Auto-symlinked into .claude/skills/ and .gemini/skills/
-Commits: 924de0c feat: /wrap-up skill | 7fb1582 feat: designer agent | 0141b71 feat: status:archive
-
-## 2026-04-15 — Session wrap, moving locations
-
-- Reviewed full backlog, presented human-readable plan
-- No commits this block
-Commits: 7fb1582 feat: designer agent | 0141b71 feat: status:archive + docs | e418a96 feat: session_log
-
-## 2026-04-15 — Plan review, no changes
-
-- Reviewed open backlog, presented prioritised plan to user
-- No commits, no file changes this block
-Commits: 7fb1582 feat: designer agent | 0141b71 feat: status:archive + docs | e418a96 feat: session_log
-
-## 2026-04-15 — Smoke test T4+T5 pass, T1-T3 pending manual run
-
-- T4 (archive warning): PASS — boot correctly warns on status=archive
-- T5 (crash recovery): PASS — checkpoint detection fires, outputs correct message
-- T1/T2/T3 pending manual run by user in fresh SmokeTest project
-- Designer agent committed and pushed (v1.2.12)
-Commits: 7fb1582 feat: designer agent | 0141b71 feat: status:archive + docs | e418a96 feat: session_log
-
-## 2026-04-15 — Designer agent added as 8th team member (v1.2.12)
-
-- .agent/agents/designer.md — UI/UX specialist, a11y rules, design defaults
-- CLAUDE.md agent table updated 7→8, profile.json agents list updated
-- onboard.md — designer auto-activates for webapp/mobile/macos soul types
-- Symlinked into .claude/agents/ and .gemini/agents/
-Commits: 7fb1582 feat: designer agent | 0141b71 feat: status:archive + docs | e418a96 feat: session_log
-
-## 2026-04-15 — Morning backlog review, no code changes
-
-- Reviewed open backlog, prioritised smoke test + markitdown + gh prompt + bash docs
-- No commits this session
-Commits: 0141b71 feat: status:archive + docs | e418a96 feat: session_log | a34c4d3 feat: soul_type
-
-## 2026-04-14 — v1.2.10–v1.2.11 docs, archive status, CLI picker, smoke test
-
-- session_log.md created and wired into Stop hook + boot recall
-- status:archive field added to profile.json, boot step 0 warns if set
-- workflows/headless.md — claude/gemini/codex headless patterns + session budgets
-- workflows/parallelism.md — per-provider capability matrix + agent team implications
-- workflows/smoke_test.md — T1–T5 manual test plan across all 3 CLIs
-- darkfact() shell function updated — Claude Code | Gemini CLI | Codex | Terminal picker
-- L18/L19 added to learned.md (hook scoping, Stop fires per response)
-Commits: 0141b71 feat: status:archive + docs | e418a96 feat: session_log | a34c4d3 feat: soul_type
-
-## 2026-04-14 — v1.2.7–v1.2.9 hardening + session_log pattern
-
-- Created `.agent/skills/boot.md` — /boot now works as slash command on all platforms
-- Upgraded Claude Code SessionStart hook to auto-prompt /boot; Gemini echo reminder
-- Fixed onboard Step 6 — replaced bash comments with real symlink commands
-- Documented checkpoint crash-resilience pattern in `workflows/checkpoint.md`
-- Wired checkpoint into onboard.md (step 5 write + step 9 cleanup)
-- Added `soul_type` stub to profile.json, wired into onboard + boot identity check
-- Added smoke test + darkfact() CLI picker tasks to backlog
-- Wired session_log into Stop hook and boot recall
-- L18/L19 added to learned.md (hook scoping + Stop fires on every response)
-Commits: a34c4d3 feat: soul_type | 521cba5 feat: checkpoint | daddd89 fix: onboard Step 6
 
 <!-- SESSIONS -->
+
+## 2026-04-18 — Gemini Hardening & Athanor Identity
+- Released v2.2.1 and v2.2.2.
+- Fixed Gemini CLI schema errors (priority <= 999, toolName string syntax).
+- Resolved sub-agent delegation friction in autonomy policy.
+- Integrated Pain Point Monitor into full_boot.sh.
+- Deprecated darkfact-upstream git remote; moved to gh CLI update model.
+- Selected "Athanor" as the future project identity.
+- Hardened update-template with scratch checkpoints.
+Commits: e221f9d, 81e4dba, 094ba18, fcc24cc, 9a6f5a0
+
+## 2026-04-18 — Release DarkFact v2.2.0
+- Autonomy policies for Gemini, Scratch-First protocol for all agents.
+- Added vex/codi shell aliases.
+Commits: 2541034
